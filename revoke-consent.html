@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>एपको बारेमा - Mero Nepal</title>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f9f9f9;
+            color: #222222;
+            padding: 16px;
+            max-width: 480px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* Header Style */
+        .settings-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding: 10px 0;
+            background: #ffffff;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-bottom: 1px solid #eee;
+        }
+
+        .settings-header i {
+            font-size: 20px;
+            color: #111;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .settings-header h1 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* Card Container for Content */
+        .policy-container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .policy-container p {
+            font-size: 15px;
+            color: #444444;
+        }
+
+        .policy-container h2 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #111111;
+            margin-top: 10px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 6px;
+        }
+
+        .policy-container ul {
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .policy-container li {
+            font-size: 15px;
+            color: #444444;
+        }
+
+        .policy-container a {
+            color: #0066cc;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .policy-container a:hover {
+            text-decoration: underline;
+        }
+
+        .update-date {
+            font-size: 13px;
+            color: #666666;
+            font-style: italic;
+        }
+
+        /* Social Box & Clear Icons Styling */
+        .social-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 18px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .social-box h3 {
+            font-size: 15px;
+            margin-bottom: 14px;
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .social-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: #ffffff !important; /* Forces icon to be pure white */
+            text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.12);
+            transition: transform 0.2s ease;
+        }
+
+        .social-icon:active {
+            transform: scale(0.92);
+        }
+
+        .fb { background-color: #1877F2; }
+        .yt { background-color: #FF0000; }
+        .tg { background-color: #229ED9; }
+        .wa { background-color: #25D366; }
+    </style>
+</head>
+<body>
+
+    <div class="settings-header">
+        <i class="fa-solid fa-arrow-left" onclick="history.back()"></i>
+        <h1>एपको बारेमा</h1>
+    </div>
+
+    <div class="policy-container">
+        <p class="update-date"><strong>संस्करण (Version):</strong> १.०.०</p>
+        
+        <p><strong>मेरो नेपाल (Mero Nepal)</strong> एक डिजिटल सिकाइ र सूचना प्लेटफर्म हो, जसलाई <strong>हरिस बिष्ट (Harish Bist)</strong> द्वारा तयार गरिएको हो। यो एप नेपाली प्रयोगकर्ताहरूका लागि विभिन्न उपयोगी सामग्री, समाचार र सूचनाहरू सहज रूपमा उपलब्ध गराउन डिजाइन गरिएको हो।</p>
+
+        <h2>मुख्य विशेषताहरू</h2>
+        <ul>
+            <li><strong>क्विज खेल्नुहोस्:</strong> विभिन्न ज्ञानवद्र्धक तथा परीक्षा उपयोगी प्रश्नोत्तरहरूसँग अभ्यास गर्न मिल्ने।</li>
+            <li><strong>नयाँ Vacancy:</strong> सरकारी तथा निजी क्षेत्रका नयाँ रोजगारीका अवसरहरूको समयमै जानकारी पाउन सकिने।</li>
+            <li><strong>ताजा समाचार:</strong> देशविदेशका ताजा घटनाक्रम तथा सूचनाहरू पढ्न मिल्ने।</li>
+            <li><strong>अध्ययन सामग्री:</strong> विभिन्न उपयोगी शैक्षिक तथा जानकारीमूलक सामग्रीहरू उपलब्ध हुने।</li>
+        </ul>
+
+        <h2>हामीसँग जोडिनुहोस्</h2>
+        <div class="social-box">
+            <h3>हाम्रो सामाजिक सञ्जालहरूमा जोडिनुहोस्</h3>
+            <div class="social-icons">
+                <a href="https://facebook.com/yourpage" target="_blank" class="social-icon fb"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="https://youtube.com/yourchannel" target="_blank" class="social-icon yt"><i class="fa-brands fa-youtube"></i></a>
+                <a href="https://t.me/yourgroup" target="_blank" class="social-icon tg"><i class="fa-brands fa-telegram"></i></a>
+                <a href="https://whatsapp.com/channel/yourlink" target="_blank" class="social-icon wa"><i class="fa-brands fa-whatsapp"></i></a>
+            </div>
+        </div>
+
+        <h2>विकासकर्ता र सम्पर्क</h2>
+        <p>यो एप हरिस बिष्ट द्वारा विकसित गरिएको हो। यदि तपाईँलाई यस एपको बारेमा कुनै पनि सुझाव वा जिज्ञासा भएमा हामीलाई इमेलमार्फत सम्पर्क गर्न सक्नुहुन्छ:</p>
+        <p><a href="mailto:harishbist576@gmail.com">harishbist576@gmail.com</a></p>
+
+        <h2>प्रतिलिपि अधिकार (Copyright)</h2>
+        <p>&copy; २०२६ मेरो नेपाल (Mero Nepal). सर्वाधिकार सुरक्षित।</p>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #111111;
+            padding: 16px;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        /* Header Style */
+        .settings-header {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            padding-top: 8px;
+        }
+
+        .settings-header i {
+            font-size: 20px;
+            color: #111;
+            cursor: pointer;
+        }
+
+        .settings-header h1 {
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        /* Settings List */
+        .settings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding: 14px 12px;
+            text-decoration: none;
+            color: #111111;
+            border-radius: 8px;
+            transition: background-color 0.2s ease;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .setting-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .setting-item i {
+            font-size: 20px;
+            width: 24px;
+            text-align: center;
+            color: #222;
+        }
+
+        .setting-item span {
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        /* Share Options Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: flex-end;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            width: 100%;
+            max-width: 480px;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            padding: 20px;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .share-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .share-option-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: #333;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .share-option-item i {
+            font-size: 28px;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: #white;
+        }
+
+        .whatsapp-icon i { background-color: #25D366; color: white; }
+        .facebook-icon i { background-color: #1877F2; color: white; }
+        .telegram-icon i { background-color: #229ED9; color: white; }
+        .copy-icon i { background-color: #e4e6eb; color: #333; }
+
+        .close-modal-btn {
+            width: 100%;
+            padding: 12px;
+            background: #f0f2f5;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="settings-header">
+        <i class="fa-solid fa-arrow-left" onclick="history.back()"></i>
+        <h1>Settings</h1>
+    </div>
+
+    <div class="settings-list">
+        <!-- Revoke Consent -->
+        <a href="revoke-consent.html" class="setting-item">
+            <i class="fa-regular fa-file-lines"></i>
+            <span>एप्सको बारेमा</span>
+        </a>
+
+        <!-- Languages -->
+        <a href="languages.html" class="setting-item">
+            <i class="fa-solid fa-language"></i>
+            <span>Languages</span>
+        </a>
+
+        <!-- Share App -->
+        <button class="setting-item" onclick="openShareModal()">
+            <i class="fa-solid fa-share-nodes"></i>
+            <span>Share App</span>
+        </button>
+
+        <!-- Rate Us -->
+        <a href="https://play.google.com/store/apps/details?id=YOUR_PACKAGE_NAME" target="_blank" class="setting-item">
+            <i class="fa-regular fa-star"></i>
+            <span>Rate Us</span>
+        </a>
+
+        <!-- Privacy Policy -->
+        <a href="privacy.html" class="setting-item">
+            <i class="fa-solid fa-lock"></i>
+            <span>Privacy Policy</span>
+        </a>
+    </div>
+
+    <!-- Custom Share Bottom Sheet Modal -->
+    <div class="modal-overlay" id="shareModal">
+        <div class="modal-content">
+            <div class="modal-title">Share App</div>
+            <div class="share-options">
+                <!-- WhatsApp -->
+                <a href="#" id="whatsappShare" class="share-option-item" target="_blank">
+                    <div class="whatsapp-icon"><i class="fa-brands fa-whatsapp"></i></div>
+                    <span>WhatsApp</span>
+                </a>
+                <!-- Facebook -->
+                <a href="#" id="facebookShare" class="share-option-item" target="_blank">
+                    <div class="facebook-icon"><i class="fa-brands fa-facebook-f"></i></div>
+                    <span>Facebook</span>
+                </a>
+                <!-- Telegram -->
+                <a href="#" id="telegramShare" class="share-option-item" target="_blank">
+                    <div class="telegram-icon"><i class="fa-brands fa-telegram"></i></div>
+                    <span>Telegram</span>
+                </a>
+                <!-- Copy Link -->
+                <div class="share-option-item" onclick="copyLink()">
+                    <div class="copy-icon"><i class="fa-solid fa-copy"></i></div>
+                    <span>Copy Link</span>
+                </div>
+            </div>
+            <button class="close-modal-btn" onclick="closeShareModal()">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        const appUrl = "https://play.google.com/store/apps/details?id=YOUR_PACKAGE_NAME";
+        const shareText = "Check out this amazing app: " + appUrl;
+
+        function openShareModal() {
+            // Setup sharing links dynamically
+            document.getElementById('whatsappShare').href = "https://api.whatsapp.com/send?text=" + encodeURIComponent(shareText);
+            document.getElementById('facebookShare').href = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(appUrl);
+            document.getElementById('telegramShare').href = "https://t.me/share/url?url=" + encodeURIComponent(appUrl) + "&text=" + encodeURIComponent("Check out this app!");
+
+            // If mobile supports native system share sheet, try opening it first, otherwise show custom modal
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Settings App',
+                    text: 'Check out this app!',
+                    url: appUrl
+                }).catch(() => {
+                    document.getElementById('shareModal').style.display = 'flex';
+                });
+            } else {
+                document.getElementById('shareModal').style.display = 'flex';
+            }
+        }
+
+        function closeShareModal() {
+            document.getElementById('shareModal').style.display = 'none';
+        }
+
+        function copyLink() {
+            navigator.clipboard.writeText(appUrl).then(() => {
+                alert("Link copied to clipboard!");
+                closeShareModal();
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+    </script>
+
+</body>
+</html>

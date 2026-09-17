@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>थप सामग्रीहरू (More Content)</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
+    <style>
+        * { box-sizing: border-box; }
+        :root {
+            --bg-color: #121212; /* पूर्ण कालो ब्याकग्राउन्ड */
+            --card-bg: #1e1e1e; /* कार्डहरूको लागि गाढा रङ */
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc; /* मुख्य सेतो अक्षर */
+            --text-sub: #94a3b8; /* हल्का खरानी अक्षर */
+            --accent-color: #38bdf8;
+        }
+        body {
+            font-family: "Kalimati", "Mukta", "Gautami", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0; padding: 0 0 100px 0;
+            overflow-x: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            color: #ffffff; 
+            padding: 20px; 
+            border-bottom: 4px solid #f59e0b;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        .header-title-box h1 { margin: 0; font-size: 22px; font-weight: 800; color: #ffffff; }
+        .header-title-box p { margin: 4px 0 0 0; font-size: 14px; font-weight: 600; color: #cbd5e1; }
+
+        .right-menu-btn {
+            background: #2a2a2a;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            width: 42px; height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .right-menu-btn:hover { background: #3a3a3a; }
+
+        .container { width: 100%; max-width: 800px; margin: 16px auto; padding: 0 12px; }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+        @media(min-width: 600px) {
+            .content-grid { grid-template-columns: repeat(2, 1fr); gap: 18px; }
+        }
+
+        .content-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px solid var(--card-border);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+        }
+        .content-card:hover {
+            transform: translateY(-5px);
+            border-color: #3b82f6;
+            box-shadow: 0 15px 30px rgba(59, 130, 246, 0.2);
+        }
+
+        .thumbnail-box {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background-color: #2a2a2a;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .thumbnail-box img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+        .play-icon-overlay {
+            position: absolute;
+            width: 45px; height: 45px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: #ffffff; font-size: 16px;
+        }
+
+        .card-info { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+        .card-title { 
+            font-size: 17px; 
+            font-weight: 700; 
+            color: var(--text-main); 
+            margin: 0; 
+            line-height: 1.45; 
+            font-family: "Kalimati", "Mukta", sans-serif;
+        }
+        .card-date { font-size: 12px; color: #38bdf8; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+
+        /* फुलस्क्रिन मोडल (पूर्ण कालो) */
+        #fullScreenModal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0; top: 0;
+            width: 100vw; height: 100vh;
+            background-color: #000000;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .modal-inner {
+            width: 100%; max-width: 700px; margin: 0 auto;
+            padding: 10px 0 70px 0; display: flex; flex-direction: column;
+            min-height: 100%; justify-content: space-between;
+        }
+        
+        .modal-header-title { 
+            font-size: 22px; 
+            font-weight: 700; 
+            color: #f87171; 
+            margin-bottom: 12px; 
+            line-height: 1.45;
+            word-break: break-word;
+            font-family: "Kalimati", "Mukta", sans-serif;
+        }
+        .modal-date { font-size: 13px; color: #38bdf8; margin-bottom: 15px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+        
+        .video-container {
+            position: relative; width: 100%; aspect-ratio: 16 / 9;
+            background: #000; border-radius: 12px; overflow: hidden;
+            margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.1);
+        }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+        .modal-image-container {
+            width: 100%; max-height: 50vh; margin-bottom: 16px;
+            border-radius: 12px; overflow: hidden; background: #1e1e1e;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .modal-image-container img { width: 100%; height: auto; max-height: 50vh; object-fit: contain; display: block; }
+
+        .modal-text-card {
+            background: #111111;
+            border: 1px solid #333333;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .modal-description {
+            font-size: 17px; 
+            color: #ffffff; 
+            line-height: 1.8; 
+            font-weight: 700; 
+            text-align: justify; 
+            word-break: break-word;
+            overflow-wrap: break-word;
+            margin: 0; 
+            padding: 0; 
+            font-family: "Kalimati", "Mukta", sans-serif;
+            white-space: pre-line;
+        }
+
+        .banner-ad-container {
+            width: 100vw;
+            margin-left: calc(-50vw + 50%);
+            background: #1a1a1a;
+            border-top: 2px dashed #444444;
+            border-bottom: 2px dashed #444444;
+            border-left: none;
+            border-right: none;
+            border-radius: 0;
+            padding: 16px;
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .social-follow-box {
+            background: linear-gradient(135deg, #1f2937 100%, #111827 100%);
+            border: 1px solid #374151;
+            border-radius: 16px;
+            padding: 15px 20px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+        .social-follow-text {
+            font-size: 15px;
+            font-weight: 700;
+            color: #fbbf24;
+            margin: 0;
+            font-family: "Kalimati", "Mukta", sans-serif;
+        }
+        .social-icons-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .social-btn {
+            width: 42px; height: 42px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: #ffffff;
+            font-size: 18px;
+            text-decoration: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
+        }
+        .social-btn:hover { transform: scale(1.08); }
+        .btn-fb { background: #1877f2; }
+        .btn-wa { background: #25d366; }
+        .btn-tk { background: #000000; border: 1px solid #444; }
+
+        /* बन्द गर्नुहोस् बटन - सेतो ब्याकग्राउन्ड र कालो अक्षर */
+        .close-modal-btn {
+            background: #ffffff;
+            color: #000000; border: none; padding: 14px 20px;
+            border-radius: 12px; font-size: 15px; font-weight: bold; cursor: pointer; width: 100%;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+            font-family: "Kalimati", "Mukta", sans-serif;
+            margin-top: 20px;
+            transition: background 0.2s;
+        }
+        .close-modal-btn:hover { background: #e2e8f0; }
+
+        /* पप-अप मेनु (कालो थिम) */
+        #popupMenu {
+            display: none;
+            position: fixed;
+            top: 70px;
+            right: 15px;
+            width: 270px;
+            max-height: 80vh;
+            overflow-y: auto;
+            background: #1e1e1e;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            padding: 8px;
+            flex-direction: column;
+            gap: 6px;
+        }
+        #popupMenu::-webkit-scrollbar { width: 4px; }
+        #popupMenu::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
+
+        .popup-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 12px;
+            color: #f8fafc;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .popup-item:hover { background: #2a2a2a; color: #38bdf8; }
+
+        .icon-circle {
+            width: 34px; height: 34px;
+            background: #2a2a2a;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; color: #38bdf8;
+            font-size: 14px; flex-shrink: 0;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Bottom Navigation Bar (पूर्ण सेतो ब्याकग्राउन्ड र कालो/डार्क टेक्स्ट/आइकन) */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: #ffffff; /* सेतो ब्याकग्राउन्ड */
+            backdrop-filter: blur(12px);
+            display: flex; justify-content: space-around; align-items: center; 
+            padding: 8px 0;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.3);
+            border-top: 1px solid #cbd5e1;
+            z-index: 900;
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-decoration: none; color: #475569; font-size: 12px; font-weight: 700;
+            padding: 6px 12px; transition: color 0.2s; gap: 3px; cursor: pointer;
+            flex: 1;
+        }
+        .nav-item i { font-size: 18px; }
+        .nav-item.active {
+            color: #0d5c3f;
+            background: transparent;
+            box-shadow: none;
+        }
+        .nav-item:hover { color: #0d5c3f; }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <div class="header-title-box">
+            <h1 id="pageTitle">थप सामग्रीहरू</h1>
+            <p id="pageSubtitle">कृपया क्याटेगोरी छान्नुहोस्</p>
+        </div>
+        <div class="right-menu-btn" id="headerMenuBtn" onclick="togglePopupMenu(event)">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="contentGrid" class="content-grid">
+            <div style="text-align: center; color: var(--text-sub); grid-column: span 2; padding: 40px; font-weight: 700;">
+                <i class="fa-regular fa-compass fa-2x" style="margin-bottom: 10px; display: block; color: var(--accent-color);"></i>डाटा लोड हुँदैछ...
+            </div>
+        </div>
+    </div>
+
+    <div id="fullScreenModal">
+        <div class="modal-inner">
+            <div>
+                <div id="modalContentArea"></div>
+            </div>
+            <button class="close-modal-btn" onclick="closeFullModal()">बन्द गर्नुहोस् (Close)</button>
+        </div>
+    </div>
+
+    <div id="popupMenu">
+        <div class="popup-item" onclick="loadCategoryData('ramayana', 'रामायण (Ramayana)')">
+            <div class="icon-circle"><i class="fa-solid fa-book-bible"></i></div>
+            <span>रामायण (Ramayana)</span>
+        </div>
+        <div class="popup-item" onclick="loadCategoryData('mahabharat', 'महाभारत (Mahabharat)')">
+            <div class="icon-circle"><i class="fa-solid fa-scroll"></i></div>
+            <span>महाभारत (Mahabharat)</span>
+        </div>
+        <div class="popup-item" onclick="loadCategoryData('shivpuran', 'शिव पुराण (Shiv Puran)')">
+            <div class="icon-circle"><i class="fa-solid fa-om"></i></div>
+            <span>शिव पुराण (Shiv Puran)</span>
+        </div>
+        <div class="popup-item" onclick="loadCategoryData('nepalikatha', 'नेपाली कथा (Nepali Katha)')">
+            <div class="icon-circle"><i class="fa-solid fa-feather-pointed"></i></div>
+            <span>नेपाली कथा (Nepali Katha)</span>
+        </div>
+        <div class="popup-item" onclick="loadCategoryData('stories', 'YouTube कथा')">
+            <div class="icon-circle"><i class="fa-solid fa-book-open-reader"></i></div>
+            <span>YouTube कथा</span>
+        </div>
+        <div class="popup-item" onclick="loadCategoryData('shayaris', 'सायरी (Shayari)')">
+            <div class="icon-circle"><i class="fa-solid fa-heart-pulse"></i></div>
+            <span>सायरी (Shayari)</span>
+        </div>
+        <div class="popup-item" onclick="loadCategoryData('motivations', 'मोटिभेसनल लाइन')">
+            <div class="icon-circle"><i class="fa-solid fa-bolt"></i></div>
+            <span>मोटिभेसनल लाइन</span>
+        </div>
+        <div class="popup-item" onclick="loadCategoryData('histories', 'इतिहास (History)')">
+            <div class="icon-circle"><i class="fa-solid fa-landmark"></i></div>
+            <span>इतिहास (History)</span>
+        </div>
+        <!-- Room Rent को लागि room-rent.html मा जाने लिङ्क -->
+        <a href="room-rent.html" class="popup-item">
+            <div class="icon-circle"><i class="fa-solid fa-house-chimney"></i></div>
+            <span>Room Rent</span>
+        </a>
+    </div>
+
+    <!-- Bottom Navigation Bar (सेतो ब्याकग्राउन्डसहित) -->
+    <div class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+        </a>
+        <a href="vacancy.html" class="nav-item">
+            <i class="fa-solid fa-file-lines"></i>
+            <span>Vacancy</span>
+        </a>
+        <a href="news.html" class="nav-item">
+            <i class="fa-solid fa-bell"></i>
+            <span>News</span>
+        </a>
+        <a href="#" class="nav-item active" onclick="togglePopupMenu(event)">
+            <i class="fa-solid fa-bars"></i>
+            <span>More</span>
+        </a>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAe32qMUjBMUBL4N6jS8eyVixK2gHMVuXw",
+            authDomain: "gk-nepal-df869.firebaseapp.com",
+            projectId: "gk-nepal-df869",
+            storageBucket: "gk-nepal-df869.firebasestorage.app",
+            messagingSenderId: "454233438620",
+            appId: "1:454233438620:web:a8292322e04ffcf2b23059"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        try {
+            enableIndexedDbPersistence(db).catch((err) => {});
+        } catch (e) {}
+
+        let currentCategoryKey = '';
+        let currentItems = [];
+        let unsubscribe = null;
+
+        window.togglePopupMenu = function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            const popup = document.getElementById('popupMenu');
+            if (popup) {
+                popup.style.display = (popup.style.display === 'flex') ? 'none' : 'flex';
+            }
+        }
+
+        function getCleanYouTubeId(input) {
+            if (!input) return '';
+            if (input.length === 11 && !input.includes('/') && !input.includes('.')) {
+                return input;
+            }
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = input.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : input;
+        }
+
+        window.loadCategoryData = function(categoryKey, titleText) {
+            currentCategoryKey = categoryKey;
+            const popup = document.getElementById('popupMenu');
+            if(popup) popup.style.display = 'none'; 
+            
+            document.getElementById('pageTitle').innerText = titleText;
+            document.getElementById('pageSubtitle').innerText = 'डेटा लोड हुँदैछ...';
+            
+            const grid = document.getElementById('contentGrid');
+            grid.innerHTML = `<div style="text-align: center; color: var(--text-sub); grid-column: span 2; padding: 40px; font-weight: 700;">डाटा लोड हुँदैछ...</div>`;
+
+            if (unsubscribe) {
+                unsubscribe();
+            }
+
+            try {
+                unsubscribe = onSnapshot(collection(db, categoryKey), (querySnapshot) => {
+                    currentItems = [];
+                    querySnapshot.forEach((docSnap) => {
+                        let data = docSnap.data();
+                        currentItems.push({ 
+                            id: docSnap.id, 
+                            ...data,
+                            title: data.title || data.quote || data.text || data.name || 'शीर्षक छैन',
+                            description: data.description || data.body || data.content || ''
+                        });
+                    });
+
+                    if (currentItems.length === 0) {
+                        grid.innerHTML = `<div style="text-align: center; color: var(--text-sub); grid-column: span 2; padding: 40px; font-weight: 700;">यस क्याटेगोरीमा हाल कुनै सामग्री उपलब्ध छैन।</div>`;
+                        document.getElementById('pageSubtitle').innerText = 'कुनै सामग्री छैन';
+                        return;
+                    }
+
+                    let html = '';
+                    currentItems.forEach((item, index) => {
+                        let rawVidInput = item.videoId || item.videoLink || '';
+                        let cleanId = getCleanYouTubeId(rawVidInput);
+                        let isVideoItem = (item.type === 'video' || cleanId.length === 11);
+
+                        let overlayIcon = isVideoItem ? `<div class="play-icon-overlay"><i class="fa-solid fa-play"></i></div>` : '';
+                        
+                        let displayImg = item.imageUrl;
+                        if (!displayImg && isVideoItem && cleanId.length === 11) {
+                            displayImg = `https://img.youtube.com/vi/${cleanId}/hqdefault.jpg`;
+                        }
+                        if (!displayImg) {
+                            displayImg = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800';
+                        }
+                        
+                        html += `
+                            <div class="content-card" onclick="openDetail(${index})">
+                                <div class="thumbnail-box">
+                                    <img src="${displayImg}" alt="Thumbnail" loading="lazy">
+                                    ${overlayIcon}
+                                </div>
+                                <div class="card-info">
+                                    <span class="card-date"><i class="fa-regular fa-calendar"></i> ${item.date || 'हालैको'}</span>
+                                    <h3 class="card-title">${item.title}</h3>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    grid.innerHTML = html;
+                    document.getElementById('pageSubtitle').innerText = 'फुलस्क्रिन अवलोकन';
+                }, (error) => {
+                    console.error("Firebase error: ", error);
+                    grid.innerHTML = `<div style="text-align: center; color: #f87171; grid-column: span 2; padding: 40px; font-weight: 700;">डाटा लोड गर्न सकिएन। इन्टरनेट जडान चेक गर्नुहोस्।</div>`;
+                });
+            } catch (err) {
+                console.error("Error setting up snapshot: ", err);
+            }
+        }
+
+        function formatDescriptionWithAdsAndSocial(rawText) {
+            if (!rawText) return '';
+            
+            let words = rawText.trim().split(/\s+/);
+            if (words.length <= 50) {
+                return `
+                    <div class="modal-text-card">
+                        <div class="modal-description">${rawText}</div>
+                    </div>
+                    <div class="banner-ad-container"><span>[ ब्यानर एड (Banner Ad) यहाँ देखिनेछ ]</span></div>
+                    <div class="social-follow-box">
+                        <p class="social-follow-text">हामीलाई फलो गर्नुहोस्:</p>
+                        <div class="social-icons-group">
+                            <a href="https://www.facebook.com/gknepal400" target="_blank" class="social-btn btn-fb"><i class="fa-brands fa-facebook-f"></i></a>
+                            <a href="https://whatsapp.com/channel/0029Vb8BA4U5EjxrdYNbi62M" target="_blank" class="social-btn btn-wa"><i class="fa-brands fa-whatsapp"></i></a>
+                            <a href="https://tiktok.com/@gknepal40" target="_blank" class="social-btn btn-tk"><i class="fa-brands fa-tiktok"></i></a>
+                        </div>
+                    </div>
+                `;
+            }
+
+            let chunks = [];
+            for (let i = 0; i < words.length; i += 50) {
+                chunks.push(words.slice(i, i + 50).join(' '));
+            }
+
+            let finalHtml = '';
+            chunks.forEach((chunk) => {
+                finalHtml += `
+                    <div class="modal-text-card">
+                        <div class="modal-description">${chunk}</div>
+                    </div>
+                    <div class="banner-ad-container"><span>[ ब्यानर एड (Banner Ad) यहाँ देखिनेछ ]</span></div>
+                    <div class="social-follow-box">
+                        <p class="social-follow-text">हामीलाई फलो गर्नुहोस्:</p>
+                        <div class="social-icons-group">
+                            <a href="https://www.facebook.com/gknepal400" target="_blank" class="social-btn btn-fb"><i class="fa-brands fa-facebook-f"></i></a>
+                            <a href="https://whatsapp.com/channel/0029Vb8BA4U5EjxrdYNbi62M" target="_blank" class="social-btn btn-wa"><i class="fa-brands fa-whatsapp"></i></a>
+                            <a href="https://tiktok.com/@gknepal40" target="_blank" class="social-btn btn-tk"><i class="fa-brands fa-tiktok"></i></a>
+                        </div>
+                    </div>
+                `;
+            });
+
+            return finalHtml;
+        }
+
+        window.openDetail = function(index) {
+            let item = currentItems[index];
+            if (!item) return;
+
+            let rawVidInput = item.videoId || item.videoLink || '';
+            let cleanVideoId = getCleanYouTubeId(rawVidInput);
+            let isVideoItem = (item.type === 'video' || cleanVideoId.length === 11);
+
+            let contentHTML = '';
+            let processedDescription = formatDescriptionWithAdsAndSocial(item.description || '');
+
+            if (isVideoItem && cleanVideoId.length === 11) {
+                contentHTML = `
+                    <div class="modal-date"><i class="fa-regular fa-calendar"></i> ${item.date || ''}</div>
+                    <div class="modal-header-title">${item.title}</div>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/${cleanVideoId}?autoplay=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    ${processedDescription}
+                `;
+            } else {
+                let detailImg = item.imageUrl || '';
+                let imgBlock = detailImg ? `<div class="modal-image-container"><img src="${detailImg}" alt="Banner"></div>` : '';
+                contentHTML = `
+                    <div class="modal-date"><i class="fa-regular fa-calendar"></i> ${item.date || ''}</div>
+                    <div class="modal-header-title">${item.title}</div>
+                    ${imgBlock}
+                    ${processedDescription}
+                `;
+            }
+
+            document.getElementById('modalContentArea').innerHTML = contentHTML;
+            document.getElementById('fullScreenModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        window.closeFullModal = function() {
+            document.getElementById('modalContentArea').innerHTML = '';
+            document.getElementById('fullScreenModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        window.addEventListener('click', function(e) {
+            const popup = document.getElementById('popupMenu');
+            const menuBtn = document.getElementById('headerMenuBtn');
+            if (popup && menuBtn) {
+                if (!popup.contains(e.target) && !menuBtn.contains(e.target)) {
+                    popup.style.display = 'none';
+                }
+            }
+        });
+
+        // पेज लोड हुने बित्तिकै मेनुमा क्लिक नगरी 'YouTube कथा' अटोमेटिक लोड गराउन:
+        loadCategoryData('stories', 'YouTube कथा');
+    </script>
+</body>
+</html>
