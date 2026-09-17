@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>एडमिन प्यानल (Secure & ImgBB Enabled)</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f1f5f9;
+            color: #0f172a;
+            margin: 0; padding: 20px;
+        }
+        /* लगइन कन्टेनरको स्टाइल */
+        #auth-wrapper {
+            max-width: 400px;
+            margin: 80px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            border: 2px solid #4f46e5;
+        }
+        #auth-wrapper h2 {
+            color: #4f46e5;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        #auth-wrapper input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 14px;
+            outline: none;
+        }
+        #auth-wrapper button {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+        }
+        #auth-wrapper button:hover {
+            background: #4338ca;
+        }
+        #error-msg {
+            color: #ef4444;
+            font-size: 13px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        /* मुख्य एडमिन प्यानल (सुरुमा लुकेको हुन्छ) */
+        #main-admin-content {
+            display: none;
+        }
+
+        .logout-top-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            float: right;
+            margin-bottom: 15px;
+        }
+        .logout-top-btn:hover { background: #dc2626; }
+
+        .admin-container {
+            max-width: 650px;
+            margin: 20px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 2px dashed #4f46e5;
+            clear: both;
+        }
+        h2 {
+            color: #4f46e5;
+            margin-top: 0;
+            font-size: 22px;
+            text-align: center;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 12px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 6px;
+            color: #1e293b;
+        }
+        .form-group select, .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+        .form-group select:focus, .form-group input:focus, .form-group textarea:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        .input-with-icon {
+            position: relative;
+        }
+        .input-with-icon input {
+            padding-left: 42px;
+        }
+        .input-with-icon .icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+        }
+        .mode-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+            background: #e2e8f0;
+            padding: 5px;
+            border-radius: 12px;
+        }
+        .mode-btn {
+            flex: 1;
+            min-width: 110px;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            background: transparent;
+            color: #475569;
+            transition: 0.2s;
+            font-size: 12.5px;
+        }
+        .mode-btn.active {
+            background: #4f46e5;
+            color: white;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+        }
+        .upload-btn {
+            background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            transition: transform 0.2s;
+        }
+        .upload-btn:hover {
+            transform: translateY(-2px);
+        }
+        .success-msg {
+            display: none;
+            background: #ecfdf5;
+            color: #065f46;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+            border: 1px solid #10b981;
+        }
+        .section-box { display: none; }
+        .section-box.active { display: block; }
+        
+        .single-option-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .single-option-row input[type="text"] {
+            flex: 1;
+        }
+        .correct-radio-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #16a34a;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+
+        .manage-container {
+            max-width: 650px;
+            margin: 20px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 2px dashed #ef4444;
+        }
+        .manage-container h3 {
+            color: #ef4444;
+            margin-top: 0;
+            font-size: 20px;
+            text-align: center;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 10px;
+        }
+        .question-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        .question-info {
+            font-size: 14px;
+            color: #1e293b;
+            word-break: break-word;
+            flex: 1;
+        }
+        .delete-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+        .delete-btn:hover { background: #dc2626; }
+        .delete-all-btn {
+            background: #b91c1c;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .delete-all-btn:hover { background: #991b1b; }
+        .auto-set-badge {
+            background: #e0e7ff;
+            color: #4338ca;
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: 13.5px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 18px;
+            border: 1px solid #c7d2fe;
+        }
+        .notif-badge {
+            background: #fef3c7;
+            color: #b45309;
+            padding: 8px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            border: 1px solid #f59e0b;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- १. एडमिन लगइन बक्स (सुरुमा देखिने) -->
+    <div id="auth-wrapper">
+        <h2>🔐 Admin Login</h2>
+        <input type="email" id="loginEmail" placeholder="Admin Email">
+        <input type="password" id="loginPassword" placeholder="Password">
+        <button onclick="loginAdmin()">Login</button>
+        <div id="error-msg"></div>
+    </div>
+
+    <!-- २. मुख्य एडमिन प्यानल (लगइन भएपछि मात्र खुल्ने) -->
+    <div id="main-admin-content">
+        <div style="max-width: 650px; margin: 0 auto; overflow: hidden;">
+            <button class="logout-top-btn" onclick="logoutAdmin()">🚪 Logout (बाहिरिने)</button>
+        </div>
+
+        <div class="admin-container">
+            <h2>🛠️ एडमिन प्यानल (ImgBB Free Hosting)</h2>
+            <div id="successMsg" class="success-msg">✅ सफलतापूर्वक सेभ भयो र नोटिफिकेसन पठाइयो!</div>
+            
+            <!-- मुख्य सेक्सन स्विच गर्ने बटनहरू -->
+            <div class="mode-selector">
+                <button type="button" class="mode-btn active" id="mainTabQuiz" onclick="switchMainTab('quiz')">🧩 क्विज</button>
+                <button type="button" class="mode-btn" id="mainTabNews" onclick="switchMainTab('news')">📰 समाचार 🔔</button>
+                <button type="button" class="mode-btn" id="mainTabVacancy" onclick="switchMainTab('vacancy')">💼 भ्याकेन्सी 🔔</button>
+                <button type="button" class="mode-btn" id="mainTabRamayana" onclick="switchMainTab('ramayana')">📙 रामायण</button>
+                <button type="button" class="mode-btn" id="mainTabMahabharat" onclick="switchMainTab('mahabharat')">📗 महाभारत</button>
+                <button type="button" class="mode-btn" id="mainTabShivPuran" onclick="switchMainTab('shivpuran')">🕉️ शिव पुराण</button>
+                <button type="button" class="mode-btn" id="mainTabNepaliKatha" onclick="switchMainTab('nepalikatha')">✍️ नेपाली कथा</button>
+                <button type="button" class="mode-btn" id="mainTabStory" onclick="switchMainTab('story')">📖 युट्युब कथा 🔔</button>
+                <button type="button" class="mode-btn" id="mainTabShayari" onclick="switchMainTab('shayari')">❤️ सायरी</button>
+                <button type="button" class="mode-btn" id="mainTabMotivation" onclick="switchMainTab('motivation')">💡 मोटिभेसन</button>
+                <button type="button" class="mode-btn" id="mainTabHistory" onclick="switchMainTab('history')">📜 इतिहास</button>
+                <button type="button" class="mode-btn" id="mainTabRoomRent" onclick="switchMainTab('roomrent')">🏠 Room Rent 🔔</button>
+            </div>
+
+            <form id="contentForm" onsubmit="handleContentUpload(event)">
+                
+                <!-- क्विज सेक्सन -->
+                <div id="quizSectionContainer" class="section-box active">
+                    <div class="mode-selector" style="margin-bottom: 15px;">
+                        <button type="button" class="mode-btn active" id="singleTabBtn" onclick="switchQuizMode('single')">१-१ प्रश्न हाल्ने</button>
+                        <button type="button" class="mode-btn" id="bulkTabBtn" onclick="switchQuizMode('bulk')">एकैचोटि धेरै (Bulk)</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="adminCategory">१. कुन क्याटेगोरी (Category) मा राख्ने?</label>
+                        <select id="adminCategory" onchange="updateAutoSetAndList()">
+                            <option value="Loksewa">लोकसेवा सामान्य ज्ञान</option>
+                            <option value="TSC">शिक्षक सेवा आयोग</option>
+                            <option value="Banking">बैंकिङ तयारी</option>
+                            <option value="Police">नेपाल प्रहरी</option>
+                            <option value="Army">नेपाली सेना</option>
+                            <option value="APF">सशस्त्र प्रहरी</option>
+                            <option value="Korean">कोरियन भाषा</option>
+                            <option value="Japanese">जापानी भाषा</option>
+                            <option value="English">अंग्रेजी भाषा</option>
+                            <option value="German">जर्मन भाषा</option>
+                            <option value="Sansthan">संस्थान तयारी</option>
+                            <option value="Health">स्वास्थ्य सेवा</option>
+                            <option value="Engineering">इन्जिनियरिङ सेवा</option>
+                            <option value="Computer">कम्प्युटर अपरेटर</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="quizTypeTarget">२. क्विजको प्रकार (Quiz Mode) छान्नुहोस्:</label>
+                        <select id="quizTypeTarget" onchange="updateAutoSetAndList()">
+                            <option value="test">Test Quiz (टाइम नभएको)</option>
+                            <option value="live">Live Quiz (१५ सेकेन्ड टाइमर भएको)</option>
+                        </select>
+                    </div>
+
+                    <div id="autoSetDisplay" class="auto-set-badge">
+                        📌 वर्तमान सेट स्थिति: <b>लोड हुँदैछ...</b>
+                    </div>
+
+                    <div id="singleSection" class="section-box active">
+                        <div class="form-group">
+                            <label>प्रश्न (Question):</label>
+                            <input type="text" id="adminQuestion" placeholder="यहाँ प्रश्न लेख्नुहोस्...">
+                        </div>
+                        
+                        <label style="font-weight: bold; font-size: 14px; margin-bottom: 6px; display:block;">अप्सनहरू र सहि उत्तर:</label>
+                        
+                        <div class="single-option-row">
+                            <input type="text" id="adminOpt1" placeholder="पहिलो अप्सन">
+                            <label class="correct-radio-label"><input type="radio" name="correctRadio" value="0" checked> सहि (Correct)</label>
+                        </div>
+                        <div class="single-option-row">
+                            <input type="text" id="adminOpt2" placeholder="दोस्रो अप्सन">
+                            <label class="correct-radio-label"><input type="radio" name="correctRadio" value="1"> सहि (Correct)</label>
+                        </div>
+                        <div class="single-option-row">
+                            <input type="text" id="adminOpt3" placeholder="तेस्रो अप्सन">
+                            <label class="correct-radio-label"><input type="radio" name="correctRadio" value="2"> सहि (Correct)</label>
+                        </div>
+                        <div class="single-option-row">
+                            <input type="text" id="adminOpt4" placeholder="चौथो अप्सन">
+                            <label class="correct-radio-label"><input type="radio" name="correctRadio" value="3"> सहि (Correct)</label>
+                        </div>
+                    </div>
+
+                    <div id="bulkSection" class="section-box">
+                        <div class="form-group">
+                            <label>एकैचोटि प्रश्नहरू तल लगातार पेस्ट गर्नुहोस् (Bulk Text):</label>
+                            <textarea id="bulkTextArea" rows="10" placeholder="लाइन खाली नछोडी लगातार प्रश्न र अप्सनहरू पेस्ट गर्नुहोस्..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- समाचार (News) सेक्सन -->
+                <div id="newsSectionContainer" class="section-box">
+                    <div class="notif-badge">🔔 यो सेक्सनमा पोस्ट हाल्दा प्रयोगकर्तालाई नोटिफिकेसन जानेछ!</div>
+                    <div class="form-group">
+                        <label>शिर्षक (Title):</label>
+                        <input type="text" id="newsTitle" placeholder="समाचारको मुख्य शिर्षक लेख्नुहोस्...">
+                    </div>
+                    <div class="form-group">
+                        <label>थम्बनेल / फोटो (Image/Thumbnail):</label>
+                        <input type="file" id="newsImageFile" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label>मिति (Date):</label>
+                        <input type="text" id="newsDate" placeholder="मिति (जस्तै: २०८२/०५/०५)">
+                    </div>
+                    <div class="form-group">
+                        <label>विस्तृत विवरण (Description):</label>
+                        <textarea id="newsDesc" rows="8" placeholder="समाचारको पूरा विवरण..."></textarea>
+                    </div>
+                </div>
+
+                <!-- भ्याकेन्सी (Vacancy) सेक्सन -->
+                <div id="vacancySectionContainer" class="section-box">
+                    <div class="notif-badge">🔔 यो सेक्सनमा पोस्ट हाल्दा प्रयोगकर्तालाई नोटिफिकेसन जानेछ!</div>
+                    <div class="form-group">
+                        <label>जागिरको शिर्षक (Title):</label>
+                        <input type="text" id="vacancyTitle" placeholder="पदको नाम...">
+                    </div>
+                    <div class="form-group">
+                        <label>थम्बनेल / ब्यानर फोटो (Thumbnail/Image):</label>
+                        <input type="file" id="vacancyImageFile" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label>अन्तिम मिति (Deadline Date):</label>
+                        <input type="text" id="vacancyDate" placeholder="अन्तिम मिति...">
+                    </div>
+                    <div class="form-group">
+                        <label>विवरण (Description):</label>
+                        <textarea id="vacancyDesc" rows="8" placeholder="योग्यता तथा अन्य विवरण..."></textarea>
+                    </div>
+                </div>
+
+                <!-- रामायण (Ramayana) सेक्सन -->
+                <div id="ramayanaSectionContainer" class="section-box">
+                    <div class="form-group">
+                        <label>शिर्षक (Title):</label>
+                        <input type="text" id="ramayanaTitle" placeholder="रामायण कथाको शिर्षक...">
+                    </div>
+                    <div class="form-group">
+                        <label>थम्बनेल / फोटो (Thumbnail/Image):</label>
+                        <input type="file" id="ramayanaImageFile" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label>विवरण (Description):</label>
+                        <textarea id="ramayanaDesc" rows="8" placeholder="रामायणको कथा विवरण..."></textarea>
+                    </div>
+                </div>
+
+                <!-- महाभारत (Mahabharat) सेक्सन -->
+                <div id="mahabharatSectionContainer" class="section-box">
+                    <div class="form-group">
+                        <label>शिर्षक (Title):</label>
+                        <input type="text" id="mahabharatTitle" placeholder="महाभारत कथाको शिर्षक...">
+                    </div>
+                    <div class="form-group">
+                        <label>थम्बनेल / फोटो (Thumbnail/Image):</label>
+                        <input type="file" id="mahabharatImageFile" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label>विवरण (Description):</label>
+                        <textarea id="mahabharatDesc" rows="8" placeholder="महाभारतको कथा विवरण..."></textarea>
+                    </div>
+                </div>
+
+                <!-- शिव पुराण (Shiv Puran) सेक्सन -->
+                <div id="shivpuranSectionContainer" class="section-box">
+                    <div class="form-group">
+                        <label>शिर्षक (Title):</label>
+                        <input type="text" id="shivpuranTitle" placeholder="शिव पुराण कथाको शिर्षक...">
+                    </div>
+                    <div class="form-group">
+                        <label>थम्बनेल / फोटो (Thumbnail/Image):</label>
+                        <input type="file" id="shivpuranImageFile" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label>विवरण (Description):</label>
+                        <textarea id="shivpuranDesc" rows="8" placeholder="शिव पुराण कथा विवरण..."></textarea>
+                    </div>
+                </div>
+
+                <!-- नेपाली कथा (Nepali Katha) सेक्सन -->
+                <div id="nepalikathaSectionContainer" class="section-box">
+                    <div class="form-group">
+                        <label>शिर्षक (Title):</label>
+                        <input type="text" id="nepalikathaTitle" placeholder="कथाको शिर्षक...">
+                    </div>
+                    <div class="form-group">
+                        <label>थम्बनेल / फोटो (Thumbnail/Image):</label>
+                        <input type="file" id="nepalikathaImageFile" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label>विवरण (Description):</label>
+                        <textarea id="nepalikathaDesc" rows="8" placeholder="कथाको पूरा विवरण..."></textarea>
+                    </div>
+                </div>
+
+                <!-- युट्युब कथा (Story) सेक्सन -->
+                <div id="storySectionContainer" class="section-box">
+                    <div class="notif-badge">🔔 यो सेक्सनमा पोस्ट हाल्दा प्रयोगकर्तालाई नोटिफिकेसन जानेछ!</div>
+                    <div class="form-group">
+                        <label>कथाको शिर्षक (Story Title):</label>
+                        <input type="text" id="storyTitle" placeholder="कथाको मुख्य शिर्षक...">
+                    </div>
+                    <div class="form-group">
+                        <label>थम्बनेल फोटो (Thumbnail):</label>
+                        <input type="file" id="storyImageFile" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label>युट्युब भिडियो लिङ्क (YouTube Video Link / ID):</label>
+                        <input type="text" id="storyVideoLink" placeholder="https://www.youtube.com/watch?v=...">
+                    </div>
+                    <div class="form-group">
+                        <label>कथाको पूरा पाठ वा सार (Story Content):</label>
+                        <textarea id="storyDesc" rows="8" placeholder="कथाको पूर्ण विवरण यहाँ लेख्नुहोस्..."></textarea>
+                    </div>
+                </div>
+
+                <!-- सायरी (Shayari) सेक्सन -->
+                <div id="shayariSectionContainer" class="section-box">
+                    <div class="form-group">
+                        <label>सायरी क्याटेगोरी (Category):</label>
+                        <select id="shayariCategory">
+                            <option value="Sad">स्याड सायरी (Sad)</option>
+                            <option value="Romantic">रोमान्टिक (Romantic)</option>
+                            <option value="Attitude">एटीट्युड (Attitude)</option>
+                            <option value="Friendship">मित्रता (Friendship)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>थम्बनेल / ब्याकग्राउन्ड फोटो (Thumbnail/Image - ऐच्छिक):</label>
+                        <input type="file" id="shayariImageFile" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label>सायरीको शब्दहरू (Shayari Text):</label>
+                        <textarea id="shayariText" rows="6" placeholder="यहाँ आफ्नो सायरी लेख्नुहोस्..."></textarea>
+                    </div>
+                </div>
+
+                <!-- मोटिभेसनल लाइन (Motivational Lines) सेक्सन -->
+                <div id="motivationSectionContainer" class="section-box">
+                    <div class="form-group">
+                        <label>लेखक वा वक्ता (Author / Speaker):</label>
+                        <input type="text" id="motivationAuthor" placeholder="जस्तै: एलन मस्क, गौतम बुद्ध वा अज्ञात">
+                    </div>
+                    <div class="form-group">
+                        <label>थम्बनेल / फोटो (Thumbnail/Image - ऐच्छिक):</label>
+                        <input type="file" id="motivationImageFile" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label>सुविचार / मोटिभेसनल भनाइ (Quote):</label>
+                        <textarea id="motivationText" rows="6" placeholder="प्रेरणादायी भनाइ यहाँ लेख्नुहोस्..."></textarea>
+                    </div>
+                </div>
+
+                <!-- इतिहास (History) सेक्सन -->
+                <div id="historySectionContainer" class="section-box">
+                    <div class="form-group">
+                        <label>इतिहासको शिर्षक / घटना (History Title):</label>
+                        <input type="text" id="historyTitle" placeholder="घटना वा व्यक्तिको नाम...">
+                    </div>
+                    <div class="form-group">
+                        <label>थम्बनेल / फोटो (Thumbnail/Image):</label>
+                        <input type="file" id="historyImageFile" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label>मिति वा साल (Date / Year):</label>
+                        <input type="text" id="historyDate" placeholder="जस्तै: वि.सं. २००७ साल फागुन ७ गते">
+                    </div>
+                    <div class="form-group">
+                        <label>ऐतिहासिक विवरण (Historical Description):</label>
+                        <textarea id="historyDesc" rows="8" placeholder="यस ऐतिहासिक घटनाको बारेमा विस्तृतमा लेख्नुहोस्..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Room Rent सेक्सन -->
+                <div id="roomrentSectionContainer" class="section-box">
+                    <div class="notif-badge">🔔 यो सेक्सनमा पोस्ट हाल्दा प्रयोगकर्तालाई नोटिफिकेसन जानेछ!</div>
+                    <div class="form-group">
+                        <label>कोठा/फ्ल्याटको शिर्षक (Title):</label>
+                        <input type="text" id="roomTitle" placeholder="जस्तै: 2 Bed Room Flat Available in Koteshwor">
+                    </div>
+                    <div class="form-group">
+                        <label>मूल्य (Price / Rent):</label>
+                        <input type="text" id="roomPrice" placeholder="जस्तै: रु. १५,००० / महिना">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>फोन नम्बर (Phone Number):</label>
+                        <div class="input-with-icon">
+                            <span class="icon">📞</span>
+                            <input type="text" id="roomPhone" placeholder="सम्पर्क फोन नम्बर (जस्तै: 98xxxxxxxx)">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>ह्वाट्सएप नम्बर (WhatsApp Number):</label>
+                        <div class="input-with-icon">
+                            <span class="icon">🟢</span>
+                            <input type="text" id="roomWhatsapp" placeholder="WhatsApp नम्बर (जस्तै: 98xxxxxxxx)">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>कोठाको फोटो / थम्बनेल (Room Image):</label>
+                        <input type="file" id="roomImageFile" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label>थप विवरण (Description):</label>
+                        <textarea id="roomDesc" rows="8" placeholder="पानी, बिजुली, पार्किङ तथा अन्य सुविधासम्बन्धी विवरण..."></textarea>
+                    </div>
+                </div>
+                
+                <button type="submit" class="upload-btn" style="margin-top: 15px;">➕ Firebase मा अपलोड गर्नुहोस्</button>
+            </form>
+        </div>
+
+        <div class="manage-container">
+            <h3 id="manageTitle">🗑️ व्यवस्थापन तथा डिलीट सेक्सन</h3>
+            
+            <div id="quizFilterGroup" class="form-group" style="margin-top: 15px;">
+                <label for="filterSetSelect">कुन सेटका प्रश्नहरू हेर्ने?</label>
+                <select id="filterSetSelect" onchange="loadManageData()">
+                    <option value="ALL">सबै सेटहरू</option>
+                </select>
+            </div>
+
+            <div id="questionListContainer" style="max-height: 350px; overflow-y: auto; margin-top: 15px;">
+                <p style="text-align: center; color: #94a3b8; font-size: 13px;">लोड हुँदैछ...</p>
+            </div>
+
+            <button type="button" class="delete-all-btn" onclick="deleteAllCurrentSelection()">⚠️ यो सूची भएका सम्पूर्ण डेटा मेटाउनुहोस्</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAe32qMUjBMUBL4N6jS8eyVixK2gHMVuXw",
+            authDomain: "gk-nepal-df869.firebaseapp.com",
+            projectId: "gk-nepal-df869",
+            storageBucket: "gk-nepal-df869.firebasestorage.app",
+            messagingSenderId: "454233438620",
+            appId: "1:454233438620:web:a8292322e04ffcf2b23059"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        const IMGBB_API_KEY = "5a325197e3abb916160e59cb78bd0818"; // ImgBB API Key
+
+        let activeMainTab = 'quiz'; 
+        let currentUploadMode = 'single'; 
+        let activeTargetSet = "Set 1";
+        let activeSetCount = 0;
+
+        // Firebase Authentication Check (लगइन छ कि छैन जाँच्ने)
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // यदि लगइन छ भने लगइन बक्स लुकाउने, प्यानल देखाउने
+                document.getElementById('auth-wrapper').style.display = 'none';
+                document.getElementById('main-admin-content').style.display = 'block';
+                updateAutoSetAndList();
+            } else {
+                // लगइन छैन भने लगइन बक्स मात्र देखाउने, प्यानल लुकाउने
+                document.getElementById('auth-wrapper').style.display = 'block';
+                document.getElementById('main-admin-content').style.display = 'none';
+            }
+        });
+
+        // लगइन गर्ने ग्लोबल फंक्सन
+        window.loginAdmin = function() {
+            let email = document.getElementById('loginEmail').value;
+            let password = document.getElementById('loginPassword').value;
+            let errEl = document.getElementById('error-msg');
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    errEl.textContent = "";
+                })
+                .catch((error) => {
+                    errEl.textContent = "लगइन मिलेन: इमेल वा पासवर्ड गलत छ!";
+                });
+        }
+
+        // बाहिरिने (Logout) ग्लोबल फंक्सन
+        window.logoutAdmin = function() {
+            signOut(auth).then(() => {
+                // सफल Logout
+            }).catch((error) => {
+                console.error("Logout Error", error);
+            });
+        }
+
+        function getBase64(file) {
+            return new Promise((resolve, reject) => {
+                let reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        // फोटो ImgBB मा अपलोड गरेर Direct URL ल्याउने फंक्शन
+        async function uploadImageToImgBB(file) {
+            let base64Image = await getBase64(file);
+            let base64Data = base64Image.split(',')[1]; 
+
+            let formData = new FormData();
+            formData.append("image", base64Data);
+
+            let response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+                method: "POST",
+                body: formData
+            });
+
+            let result = await response.json();
+            if (result.success) {
+                return result.data.url; 
+            } else {
+                throw new Error("ImgBB मा फोटो अपलोड असफल भयो!");
+            }
+        }
+
+        function extractYouTubeId(urlOrId) {
+            if (!urlOrId) return "";
+            let cleanInput = urlOrId.trim();
+            if (/^[a-zA-Z0-9_-]{11}$/.test(cleanInput)) {
+                return cleanInput;
+            }
+            let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            let match = cleanInput.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : cleanInput;
+        }
+
+        async function triggerNotification(sectionName, titleText) {
+            const allowedSections = ['news', 'vacancy', 'story', 'roomrent'];
+            if (!allowedSections.includes(sectionName)) return;
+
+            let topicMap = {
+                news: 'news_updates',
+                vacancy: 'vacancy_updates',
+                story: 'youtube_stories',
+                roomrent: 'room_rent_updates'
+            };
+
+            let targetTopic = topicMap[sectionName];
+            console.log(`[Push Notification Sent] Topic: ${targetTopic}, Title: ${titleText}`);
+        }
+
+        const allTabsList = ['quiz', 'news', 'vacancy', 'ramayana', 'mahabharat', 'shivpuran', 'nepalikatha', 'story', 'shayari', 'motivation', 'history', 'roomrent'];
+
+        window.switchMainTab = function(tab) {
+            activeMainTab = tab;
+            
+            allTabsList.forEach(id => {
+                let el = document.getElementById(id + 'SectionContainer');
+                if (el) el.classList.remove('active');
+                let btn = document.getElementById('mainTab' + id.charAt(0).toUpperCase() + id.slice(1));
+                if (btn) btn.classList.remove('active');
+            });
+
+            let activeBtn = document.getElementById('mainTab' + tab.charAt(0).toUpperCase() + tab.slice(1));
+            if (activeBtn) activeBtn.classList.add('active');
+            let activeSec = document.getElementById(tab + 'SectionContainer');
+            if (activeSec) activeSec.classList.add('active');
+
+            let filterGroup = document.getElementById('quizFilterGroup');
+
+            if (tab === 'quiz') {
+                filterGroup.style.display = 'block';
+                document.getElementById('manageTitle').textContent = '🗑️ क्विज प्रश्न व्यवस्थापन सेक्सन';
+                updateAutoSetAndList();
+            } else {
+                filterGroup.style.display = 'none';
+                document.getElementById('manageTitle').textContent = `🗑️ ${tab.toUpperCase()} व्यवस्थापन तथा डिलीट सेक्सन`;
+                loadManageData();
+            }
+        }
+
+        window.switchQuizMode = function(mode) {
+            currentUploadMode = mode;
+            let singleSec = document.getElementById('singleSection');
+            let bulkSec = document.getElementById('bulkSection');
+            let singleBtn = document.getElementById('singleTabBtn');
+            let bulkBtn = document.getElementById('bulkTabBtn');
+
+            if (mode === 'single') {
+                singleSec.classList.add('active');
+                bulkSec.classList.remove('active');
+                singleBtn.classList.add('active');
+                bulkBtn.classList.remove('active');
+            } else {
+                singleSec.classList.remove('active');
+                bulkSec.classList.add('active');
+                singleBtn.classList.remove('active');
+                bulkBtn.classList.add('active');
+            }
+        }
+
+        window.updateAutoSetAndList = async function() {
+            if (activeMainTab !== 'quiz') return;
+            let cat = document.getElementById('adminCategory').value;
+            let qMode = document.getElementById('quizTypeTarget').value;
+
+            try {
+                const qRef = query(collection(db, "questions"), where("category", "==", cat), where("mode", "==", qMode));
+                const querySnapshot = await getDocs(qRef);
+
+                let setCounts = {};
+                let allSetsSet = new Set();
+
+                querySnapshot.forEach(docSnap => {
+                    let data = docSnap.data();
+                    let sName = data.setName || "Set 1";
+                    allSetsSet.add(sName);
+                    setCounts[sName] = (setCounts[sName] || 0) + 1;
+                });
+
+                let sortedSets = Array.from(allSetsSet).sort((a, b) => {
+                    let numA = parseInt(a.replace(/\D/g, '')) || 0;
+                    let numB = parseInt(b.replace(/\D/g, '')) || 0;
+                    return numA - numB;
+                });
+
+                if (sortedSets.length === 0) {
+                    activeTargetSet = "Set 1";
+                    activeSetCount = 0;
+                } else {
+                    let lastSet = sortedSets[sortedSets.length - 1];
+                    let countInLast = setCounts[lastSet] || 0;
+
+                    if (countInLast < 50) {
+                        activeTargetSet = lastSet;
+                        activeSetCount = countInLast;
+                    } else {
+                        let lastNum = parseInt(lastSet.replace(/\D/g, '')) || sortedSets.length;
+                        activeTargetSet = `Set ${lastNum + 1}`;
+                        activeSetCount = 0;
+                        sortedSets.push(activeTargetSet);
+                    }
+                }
+
+                document.getElementById('autoSetDisplay').innerHTML = `📌 हालको अपलोडिने सेट: <b>${activeTargetSet}</b> (यसमा ${activeSetCount}/50 प्रश्न छन्)`;
+
+                let filterSelect = document.getElementById('filterSetSelect');
+                let currentSelectedFilter = filterSelect.value;
+                filterSelect.innerHTML = '<option value="ALL">सबै सेटहरू</option>';
+
+                sortedSets.forEach(sName => {
+                    let opt = document.createElement('option');
+                    opt.value = sName;
+                    opt.textContent = `${sName} (${setCounts[sName] || 0} वटा)`;
+                    filterSelect.appendChild(opt);
+                });
+
+                if (Array.from(filterSelect.options).some(opt => opt.value === currentSelectedFilter)) {
+                    filterSelect.value = currentSelectedFilter;
+                }
+
+                loadManageData();
+            } catch (error) {
+                console.error("Auto Set Error: ", error);
+            }
+        }
+
+        window.handleContentUpload = async function(e) {
+            e.preventDefault();
+
+            try {
+                let collectionName = "";
+                let dataObj = { createdAt: new Date() };
+                let notificationTitle = "";
+
+                if (activeMainTab === 'quiz') {
+                    collectionName = "questions";
+                    let cat = document.getElementById('adminCategory').value;
+                    let qMode = document.getElementById('quizTypeTarget').value;
+
+                    if (currentUploadMode === 'single') {
+                        if (activeSetCount >= 50) {
+                            let currentNum = parseInt(activeTargetSet.replace(/\D/g, '')) || 1;
+                            activeTargetSet = `Set ${currentNum + 1}`;
+                            activeSetCount = 0;
+                        }
+
+                        let q = document.getElementById('adminQuestion').value;
+                        let optionsArr = [
+                            document.getElementById('adminOpt1').value,
+                            document.getElementById('adminOpt2').value,
+                            document.getElementById('adminOpt3').value,
+                            document.getElementById('adminOpt4').value
+                        ];
+
+                        let radios = document.getElementsByName('correctRadio');
+                        let correctIndex = 0;
+                        for (let i = 0; i < radios.length; i++) {
+                            if (radios[i].checked) { correctIndex = parseInt(radios[i].value); break; }
+                        }
+
+                        dataObj = {
+                            category: cat,
+                            mode: qMode,
+                            setName: activeTargetSet,
+                            question: q,
+                            options: optionsArr,
+                            correctAnswer: optionsArr[correctIndex],
+                            createdAt: new Date()
+                        };
+                        await addDoc(collection(db, collectionName), dataObj);
+
+                        document.getElementById('adminQuestion').value = '';
+                        document.getElementById('adminOpt1').value = '';
+                        document.getElementById('adminOpt2').value = '';
+                        document.getElementById('adminOpt3').value = '';
+                        document.getElementById('adminOpt4').value = '';
+                    } else {
+                        let bulkText = document.getElementById('bulkTextArea').value;
+                        let lines = bulkText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+                        let addedCount = 0;
+
+                        for (let i = 0; i < lines.length; i += 5) {
+                            if (i + 4 < lines.length) {
+                                if (activeSetCount >= 50) {
+                                    let currentNum = parseInt(activeTargetSet.replace(/\D/g, '')) || 1;
+                                    activeTargetSet = `Set ${currentNum + 1}`;
+                                    activeSetCount = 0;
+                                }
+
+                                let qText = lines[i].replace(/^(प्रश्न:|Q[\.\:]?)\s*/i, '');
+                                let rawOptions = [lines[i+1], lines[i+2], lines[i+3], lines[i+4]];
+                                let cleanOptions = [];
+                                let detectedCorrectAnswer = "";
+
+                                rawOptions.forEach(optLine => {
+                                    let isCorrectMarked = /^[✔✅\*]/i.test(optLine);
+                                    let cleaned = optLine.replace(/^[✔✅\*]\s*/, '').replace(/^[A-Da-d][\.\)]\s*/, '').trim();
+                                    if (isCorrectMarked) detectedCorrectAnswer = cleaned;
+                                    cleanOptions.push(cleaned);
+                                });
+
+                                if (!detectedCorrectAnswer && cleanOptions.length > 0) detectedCorrectAnswer = cleanOptions[0];
+
+                                await addDoc(collection(db, "questions"), {
+                                    category: cat,
+                                    mode: qMode,
+                                    setName: activeTargetSet,
+                                    question: qText,
+                                    options: cleanOptions,
+                                    correctAnswer: detectedCorrectAnswer,
+                                    createdAt: new Date()
+                                });
+
+                                addedCount++;
+                                activeSetCount++;
+                            }
+                        }
+                        if (addedCount === 0) { alert('⚠️ सही फर्म्याटमा डेटा राख्नुहोस्!'); return; }
+                        document.getElementById('bulkTextArea').value = '';
+                    }
+                    updateAutoSetAndList();
+                    return;
+
+                } else {
+                    let uploadedImageUrl = "";
+                    let fileInputEl = document.querySelector(`#${activeMainTab}SectionContainer input[type="file"]`);
+                    if (fileInputEl && fileInputEl.files[0]) {
+                        uploadedImageUrl = await uploadImageToImgBB(fileInputEl.files[0]);
+                    }
+
+                    if (activeMainTab === 'news') {
+                        collectionName = "news";
+                        notificationTitle = document.getElementById('newsTitle').value;
+                        dataObj = {
+                            title: notificationTitle,
+                            imageUrl: uploadedImageUrl,
+                            date: document.getElementById('newsDate').value,
+                            description: document.getElementById('newsDesc').value,
+                            createdAt: new Date()
+                        };
+                        document.getElementById('newsTitle').value = '';
+                        document.getElementById('newsImageFile').value = '';
+                        document.getElementById('newsDate').value = '';
+                        document.getElementById('newsDesc').value = '';
+
+                    } else if (activeMainTab === 'vacancy') {
+                        collectionName = "vacancies";
+                        notificationTitle = document.getElementById('vacancyTitle').value;
+                        dataObj = {
+                            title: notificationTitle,
+                            imageUrl: uploadedImageUrl,
+                            date: document.getElementById('vacancyDate').value,
+                            description: document.getElementById('vacancyDesc').value,
+                            createdAt: new Date()
+                        };
+                        document.getElementById('vacancyTitle').value = '';
+                        document.getElementById('vacancyImageFile').value = '';
+                        document.getElementById('vacancyDate').value = '';
+                        document.getElementById('vacancyDesc').value = '';
+
+                    } else if (activeMainTab === 'ramayana') {
+                        collectionName = "ramayana";
+                        dataObj = {
+                            title: document.getElementById('ramayanaTitle').value,
+                            imageUrl: uploadedImageUrl,
+                            description: document.getElementById('ramayanaDesc').value,
+                            createdAt: new Date()
+                        };
+                        document.getElementById('ramayanaTitle').value = '';
+                        document.getElementById('ramayanaImageFile').value = '';
+                        document.getElementById('ramayanaDesc').value = '';
+
+                    } else if (activeMainTab === 'mahabharat') {
+                        collectionName = "mahabharat";
+                        dataObj = {
+                            title: document.getElementById('mahabharatTitle').value,
+                            imageUrl: uploadedImageUrl,
+                            description: document.getElementById('mahabharatDesc').value,
+                            createdAt: new Date()
+                        };
+                        document.getElementById('mahabharatTitle').value = '';
+                        document.getElementById('mahabharatImageFile').value = '';
+                        document.getElementById('mahabharatDesc').value = '';
+
+                    } else if (activeMainTab === 'shivpuran') {
+                        collectionName = "shivpuran";
+                        dataObj = {
+                            title: document.getElementById('shivpuranTitle').value,
+                            imageUrl: uploadedImageUrl,
+                            description: document.getElementById('shivpuranDesc').value,
+                            createdAt: new Date()
+                        };
+                        document.getElementById('shivpuranTitle').value = '';
+                        document.getElementById('shivpuranImageFile').value = '';
+                        document.getElementById('shivpuranDesc').value = '';
+
+                    } else if (activeMainTab === 'nepalikatha') {
+                        collectionName = "nepalikatha";
+                        dataObj = {
+                            title: document.getElementById('nepalikathaTitle').value,
+                            imageUrl: uploadedImageUrl,
+                            description: document.getElementById('nepalikathaDesc').value,
+                            createdAt: new Date()
+                        };
+                        document.getElementById('nepalikathaTitle').value = '';
+                        document.getElementById('nepalikathaImageFile').value = '';
+                        document.getElementById('nepalikathaDesc').value = '';
+
+                    } else if (activeMainTab === 'story') {
+                        collectionName = "stories";
+                        notificationTitle = document.getElementById('storyTitle').value;
+                        let rawVideoInput = document.getElementById('storyVideoLink').value;
+                        dataObj = {
+                            title: notificationTitle,
+                            imageUrl: uploadedImageUrl,
+                            videoLink: extractYouTubeId(rawVideoInput),
+                            description: document.getElementById('storyDesc').value,
+                            createdAt: new Date()
+                        };
+                        document.getElementById('storyTitle').value = '';
+                        document.getElementById('storyImageFile').value = '';
+                        document.getElementById('storyVideoLink').value = '';
+                        document.getElementById('storyDesc').value = '';
+
+                    } else if (activeMainTab === 'shayari') {
+                        collectionName = "shayaris";
+                        dataObj = {
+                            category: document.getElementById('shayariCategory').value,
+                            imageUrl: uploadedImageUrl,
+                            text: document.getElementById('shayariText').value,
+                            createdAt: new Date()
+                        };
+                        document.getElementById('shayariImageFile').value = '';
+                        document.getElementById('shayariText').value = '';
+
+                    } else if (activeMainTab === 'motivation') {
+                        collectionName = "motivations";
+                        dataObj = {
+                            author: document.getElementById('motivationAuthor').value,
+                            imageUrl: uploadedImageUrl,
+                            text: document.getElementById('motivationText').value,
+                            createdAt: new Date()
+                        };
+                        document.getElementById('motivationAuthor').value = '';
+                        document.getElementById('motivationImageFile').value = '';
+                        document.getElementById('motivationText').value = '';
+
+                    } else if (activeMainTab === 'history') {
+                        collectionName = "histories";
+                        dataObj = {
+                            title: document.getElementById('historyTitle').value,
+                            imageUrl: uploadedImageUrl,
+                            date: document.getElementById('historyDate').value,
+                            description: document.getElementById('historyDesc').value,
+                            createdAt: new Date()
+                        };
+                        document.getElementById('historyTitle').value = '';
+                        document.getElementById('historyImageFile').value = '';
+                        document.getElementById('historyDate').value = '';
+                        document.getElementById('historyDesc').value = '';
+
+                    } else if (activeMainTab === 'roomrent') {
+                        collectionName = "roomrent";
+                        notificationTitle = document.getElementById('roomTitle').value;
+                        dataObj = {
+                            title: notificationTitle,
+                            price: document.getElementById('roomPrice').value,
+                            phone: document.getElementById('roomPhone').value,
+                            whatsapp: document.getElementById('roomWhatsapp').value,
+                            imageUrl: uploadedImageUrl,
+                            description: document.getElementById('roomDesc').value,
+                            createdAt: new Date()
+                        };
+                        document.getElementById('roomTitle').value = '';
+                        document.getElementById('roomPrice').value = '';
+                        document.getElementById('roomPhone').value = '';
+                        document.getElementById('roomWhatsapp').value = '';
+                        document.getElementById('roomImageFile').value = '';
+                        document.getElementById('roomDesc').value = '';
+                    }
+
+                    await addDoc(collection(db, collectionName), dataObj);
+                    await triggerNotification(activeMainTab, notificationTitle);
+                }
+
+                loadManageData();
+                let successMsg = document.getElementById('successMsg');
+                successMsg.style.display = 'block';
+                setTimeout(() => { successMsg.style.display = 'none'; }, 3000);
+
+            } catch (error) {
+                console.error("Upload Error: ", error);
+                alert("अपलोड गर्दा त्रुटि भयो! कृपया फेरि प्रयास गर्नुहोस्।");
+            }
+        }
+
+        function getCollectionNameByTab(tab) {
+            const map = {
+                quiz: 'questions',
+                news: 'news',
+                vacancy: 'vacancies',
+                ramayana: 'ramayana',
+                mahabharat: 'mahabharat',
+                shivpuran: 'shivpuran',
+                nepalikatha: 'nepalikatha',
+                story: 'stories',
+                shayari: 'shayaris',
+                motivation: 'motivations',
+                history: 'histories',
+                roomrent: 'roomrent'
+            };
+            return map[tab] || 'news';
+        }
+
+        window.loadManageData = async function() {
+            let container = document.getElementById('questionListContainer');
+            container.innerHTML = '<p style="text-align: center; color: #94a3b8; font-size: 13px;">लोड हुँदैछ...</p>';
+
+            try {
+                let querySnapshot;
+                let colName = getCollectionNameByTab(activeMainTab);
+
+                if (activeMainTab === 'quiz') {
+                    let cat = document.getElementById('adminCategory').value;
+                    let qMode = document.getElementById('quizTypeTarget').value;
+                    let selectedSet = document.getElementById('filterSetSelect').value;
+
+                    let qRef = (!selectedSet || selectedSet === 'ALL') 
+                        ? query(collection(db, colName), where("category", "==", cat), where("mode", "==", qMode))
+                        : query(collection(db, colName), where("category", "==", cat), where("mode", "==", qMode), where("setName", "==", selectedSet));
+                    querySnapshot = await getDocs(qRef);
+
+                } else {
+                    querySnapshot = await getDocs(collection(db, colName));
+                }
+
+                container.innerHTML = '';
+                if (querySnapshot.empty) {
+                    container.innerHTML = '<p style="text-align: center; color: #94a3b8; font-size: 13px;">कुनै पनि डेटा उपलब्ध छैन।</p>';
+                    return;
+                }
+
+                let index = 0;
+                querySnapshot.querySnapshot?.forEach ? querySnapshot.forEach((docSnap) => {}) : null; // Safe fallback
+                
+                querySnapshot.forEach((docSnap) => {
+                    index++;
+                    let item = docSnap.data();
+                    let docId = docSnap.id;
+                    let titleText = item.question || item.title || item.text || 'शीर्षक नभएको';
+                    let metaInfo = (activeMainTab === 'quiz') ? `[${item.setName || 'Set 1'}] ` : (item.date ? `[${item.date}] ` : '');
+
+                    let div = document.createElement('div');
+                    div.className = 'question-item';
+                    div.innerHTML = `
+                        <div class="question-info"><b>${index}. ${metaInfo}</b> ${titleText}</div>
+                        <button class="button delete-btn" onclick="deleteSingleItem('${docId}')">❌ डिलीट</button>
+                    `;
+                    container.appendChild(div);
+                });
+            } catch (error) {
+                console.error("Fetch Error: ", error);
+                container.innerHTML = '<p style="text-align: center; color: #ef4444; font-size: 13px;">डाटा लोड गर्न सकिएन।</p>';
+            }
+        }
+
+        window.deleteSingleItem = async function(docId) {
+            if (confirm('के तपाईं यो आइटम मेटाउन चाहनुहुन्छ?')) {
+                try {
+                    let colName = getCollectionNameByTab(activeMainTab);
+                    await deleteDoc(doc(db, colName, docId));
+                    if (activeMainTab === 'quiz') updateAutoSetAndList();
+                    else loadManageData();
+                } catch (error) {
+                    console.error("Delete Error: ", error);
+                }
+            }
+        }
+
+        window.deleteAllCurrentSelection = async function() {
+            if (confirm('⚠️ के तपाईं यो सूचीमा भएका सम्पूर्ण डेटा स्थायी रूपमा मेटाउन चाहनुहुन्छ?')) {
+                try {
+                    let querySnapshot;
+                    let colName = getCollectionNameByTab(activeMainTab);
+
+                    if (activeMainTab === 'quiz') {
+                        let cat = document.getElementById('adminCategory').value;
+                        let qMode = document.getElementById('quizTypeTarget').value;
+                        let selectedSet = document.getElementById('filterSetSelect').value;
+                        let qRef = (selectedSet === 'ALL') 
+                            ? query(collection(db, colName), where("category", "==", cat), where("mode", "==", qMode))
+                            : query(collection(db, colName), where("category", "==", cat), where("mode", "==", qMode), where("setName", "==", selectedSet));
+                        querySnapshot = await getDocs(qRef);
+                    } else {
+                        querySnapshot = await getDocs(collection(db, colName));
+                    }
+
+                    let deletePromises = [];
+                    querySnapshot.forEach((docSnap) => {
+                        deletePromises.push(deleteDoc(doc(db, colName, docSnap.id)));
+                    });
+
+                    await Promise.all(deletePromises);
+                    if (activeMainTab === 'quiz') updateAutoSetAndList();
+                    else loadManageData();
+                    alert("सफलतापूर्वक मेटाइए!");
+                } catch (error) {
+                    console.error("Delete All Error: ", error);
+                }
+            }
+        };
+    </script>
+</body>
+</html>
