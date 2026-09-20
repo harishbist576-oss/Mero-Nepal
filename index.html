@@ -23,57 +23,6 @@ body {
     overflow-x: hidden; 
 } 
 
-/* --- टिकटक शैलीको Splash Screen (सुरुमा ३ सेकेन्ड देखिने लोगो) --- */
-#splash-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: #000000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 99999;
-    transition: opacity 0.6s ease, visibility 0.6s ease;
-}
-.splash-content {
-    text-align: center;
-}
-.splash-logo {
-    color: #ffffff;
-    font-size: 40px;
-    font-weight: 800;
-    letter-spacing: 2px;
-    margin-bottom: 8px;
-    font-family: "Kalimati", "Mukta", sans-serif;
-    animation: pulse 1.2s infinite ease-in-out;
-}
-.splash-author {
-    color: #94a3b8;
-    font-size: 15px;
-    font-weight: 500;
-    letter-spacing: 1.5px;
-    margin-bottom: 12px;
-}
-.splash-sub {
-    color: #10b981;
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-}
-@keyframes pulse {
-    0% { opacity: 0.4; transform: scale(0.94); }
-    50% { opacity: 1; transform: scale(1.06); }
-    100% { opacity: 0.4; transform: scale(0.94); }
-}
-.splash-hidden {
-    opacity: 0;
-    visibility: hidden;
-}
-/* ------------------------------------------------------------- */
-
 header { 
     background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); 
     color: #1e293b; 
@@ -644,15 +593,6 @@ header p {
 </head> 
 <body> 
 
-<!-- सुरुमा ३ सेकेन्ड देखिने टिकटक शैलीको Splash Screen -->
-<div id="splash-screen">
-    <div class="splash-content">
-        <div class="splash-logo">MERO NEPAL</div>
-        <div class="splash-author">Harish Bist</div>
-        <div class="splash-sub">Welcome</div>
-    </div>
-</div>
-
 <header> 
     <div class="settings-icon-btn" onclick="openAboutPage()"> 
         <i class="fa-solid fa-gear"></i> 
@@ -752,9 +692,9 @@ header p {
         <div class="social-share-container"> 
             <p>हामीलाई फलो गर्नुहोस्:</p> 
             <div class="social-icons"> 
-                <a href="https://www.facebook.com/gknepal400" target="_blank" class="social-icon-btn fb-bg"><i class="fa-brands fa-facebook-f"></i></a> 
-                <a href="https://whatsapp.com/channel/0029Vb8BA4U5EjxrdYNbi62M" target="_blank" class="social-icon-btn wa-bg"><i class="fa-brands fa-whatsapp"></i></a> 
-                <a href="https://tiktok.com/@gknepal40" target="_blank" class="social-icon-btn tt-bg"><i class="fa-brands fa-tiktok"></i></a> 
+                <a href="https://www.facebook.com/gknepal400" target="_blank" rel="noopener noreferrer" class="social-icon-btn fb-bg"><i class="fa-brands fa-facebook-f"></i></a> 
+                <a href="https://whatsapp.com/channel/0029Vb8BA4U5EjxrdYNbi62M" target="_blank" rel="noopener noreferrer" class="social-icon-btn wa-bg"><i class="fa-brands fa-whatsapp"></i></a> 
+                <a href="https://tiktok.com/@gknepal40" target="_blank" rel="noopener noreferrer" class="social-icon-btn tt-bg"><i class="fa-brands fa-tiktok"></i></a> 
             </div> 
         </div> 
     </div> 
@@ -788,19 +728,6 @@ header p {
 <div id="quizScreen"> 
     <div class="quiz-wrapper" id="screenContent"></div> 
 </div> 
-
-<script>
-    // ठीक ३ सेकेन्ड (3000 milliseconds) पछि स्प्लैश स्क्रिन हट्ने स्क्रिप्ट
-    window.addEventListener('load', function() {
-        setTimeout(function() {
-            const splash = document.getElementById('splash-screen');
-            if (splash) {
-                splash.classList.add('splash-hidden');
-                setTimeout(() => splash.remove(), 600);
-            }
-        }, 3000); // ३ सेकेन्ड
-    });
-</script>
 
 <script type="module"> 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"; 
@@ -1124,9 +1051,9 @@ window.startReadingBookSet = function(setName) {
             <div class="reading-social-box"> 
                 <span>हामीलाई फलो गर्नुहोस्:</span> 
                 <div class="reading-social-icons"> 
-                    <a href="https://www.facebook.com/gknepal400" target="_blank" class="reading-soc-btn fb-bg"><i class="fa-brands fa-facebook-f"></i> Follow</a> 
-                    <a href="https://whatsapp.com/channel/0029Vb8BA4U5EjxrdYNbi62M" target="_blank" class="reading-soc-btn wa-bg"><i class="fa-brands fa-whatsapp"></i> Follow</a> 
-                    <a href="https://tiktok.com/@gknepal40" target="_blank" class="reading-soc-btn tt-bg"><i class="fa-brands fa-tiktok"></i> Follow</a> 
+                    <a href="https://www.facebook.com/gknepal400" target="_blank" rel="noopener noreferrer" class="reading-soc-btn fb-bg"><i class="fa-brands fa-facebook-f"></i> Follow</a> 
+                    <a href="https://whatsapp.com/channel/0029Vb8BA4U5EjxrdYNbi62M" target="_blank" rel="noopener noreferrer" class="reading-soc-btn wa-bg"><i class="fa-brands fa-whatsapp"></i> Follow</a> 
+                    <a href="https://tiktok.com/@gknepal40" target="_blank" rel="noopener noreferrer" class="reading-soc-btn tt-bg"><i class="fa-brands fa-tiktok"></i> Follow</a> 
                 </div> 
             </div> 
         `; 
@@ -1232,9 +1159,9 @@ window.loadQuizQuestion = function() {
             <div class="score-board"> 
                 <span class="correct-count">सहि: ${correctScore}</span> 
                 <div class="quiz-social-bar"> 
-                    <a href="https://www.facebook.com/gknepal400" target="_blank" class="quiz-social-icon fb-bg"><i class="fa-brands fa-facebook-f"></i></a> 
-                    <a href="https://whatsapp.com/channel/0029Vb8BA4U5EjxrdYNbi62M" target="_blank" class="quiz-social-icon wa-bg"><i class="fa-brands fa-whatsapp"></i></a> 
-                    <a href="https://tiktok.com/@gknepal40" target="_blank" class="quiz-social-icon tt-bg"><i class="fa-brands fa-tiktok"></i></a> 
+                    <a href="https://www.facebook.com/gknepal400" target="_blank" rel="noopener noreferrer" class="quiz-social-icon fb-bg"><i class="fa-brands fa-facebook-f"></i></a> 
+                    <a href="https://whatsapp.com/channel/0029Vb8BA4U5EjxrdYNbi62M" target="_blank" rel="noopener noreferrer" class="quiz-social-icon wa-bg"><i class="fa-brands fa-whatsapp"></i></a> 
+                    <a href="https://tiktok.com/@gknepal40" target="_blank" rel="noopener noreferrer" class="quiz-social-icon tt-bg"><i class="fa-brands fa-tiktok"></i></a> 
                 </div> 
                 <span class="wrong-count">गलत: ${wrongScore}</span> 
             </div> 
