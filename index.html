@@ -45,7 +45,6 @@ header p {
     color: #64748b; 
     font-weight: 500; 
 } 
-/* Settings Icon Style */ 
 .settings-icon-btn { 
     position: absolute; 
     top: 20px; 
@@ -1257,6 +1256,19 @@ window.onclick = function(event) {
         window.closeModal(); 
     } 
 } 
+
+/* WebView Error Fix: 외부 लिङ्कहरू वा fb:// हरू क्रश नभई ब्राउजर वा एपमा खोल्नको लागि */
+document.addEventListener('click', function(e) {
+    let target = e.target.closest('a');
+    if (target && target.href) {
+        let href = target.getAttribute('href');
+        if (href.startsWith('fb://') || href.startsWith('whatsapp://') || href.startsWith('intent://') || href.startsWith('market://')) {
+            // Android WebView को लागि यदि Java तर्फ इन्टरसेप्ट गर्नुपर्ने भए वा सीधा छाड्नको लागि
+            e.preventDefault();
+            window.location.href = href;
+        }
+    }
+}, true);
 
 if ('serviceWorker' in navigator) { 
     window.addEventListener('load', () => { 
