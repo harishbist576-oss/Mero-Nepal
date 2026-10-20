@@ -1,4 +1,5 @@
-<!DOCTYPE html>  <html lang="ne">  
+<!DOCTYPE html>  
+<html lang="ne">  
 <head>  
 <meta charset="UTF-8">  
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">  
@@ -9,7 +10,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">  
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>  
 <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Roboto:wght@400;500;600;700;800&display=swap" rel="stylesheet">  
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">  <style>  
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">  
+
+<!-- Google AdMob / AdSense Script -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3940256099942544" crossorigin="anonymous"></script>
+
+<style>  
 :root{  
  --navy:#101c35;  
  --navy2:#172b50;  
@@ -264,7 +270,7 @@ header p{margin:5px 0 0;font-size:13px;color:#dce7ff;font-weight:500}
  background:#e8efff;color:#285cdb;font-size:12px;font-weight:800  
 }  
 .banner-ad{  
- width:100%;max-width:320px;height:50px;margin:8px auto;  
+ width:100%;max-width:320px;min-height:50px;margin:8px auto;  
  display:flex;align-items:center;justify-content:center;  
  overflow:hidden;flex-shrink:0  
 }  
@@ -320,7 +326,9 @@ footer{padding:18px 10px;text-align:center;color:#8995a8;font-size:11px}
  .question-box{font-size:14px}  
  .mcq-option{font-size:13px}  
 }  
-</style>  </head>  <body>  
+</style>  
+</head>  
+<body>  
 <header>  
  <button class="settings-icon-btn" onclick="openAboutPage()" aria-label="Settings">  
   <i class="fa-solid fa-gear"></i>  
@@ -333,17 +341,23 @@ footer{padding:18px 10px;text-align:center;color:#8995a8;font-size:11px}
   </div>  
  </div>  
  <div class="header-pill"><span class="online-dot"></span> आफ्नो ज्ञान जाँच्नुहोस्</div>  
-</header>  <main class="container">  
+</header>  
+
+<main class="container">  
  <section class="welcome-card">  
   <div>  
    <h2>नमस्कार, तयारी सुरु गरौँ!</h2>  
    <p>आफ्नो लक्ष्यअनुसार विषय छान्नुहोस् र अभ्यास गर्नुहोस्।</p>  
   </div>  
   <div class="welcome-icon"><i class="fa-solid fa-book-open-reader"></i></div>  
- </section>   <div class="section-heading">  
+ </section>   
+
+ <div class="section-heading">  
   <h2><i class="fa-solid fa-layer-group" style="color:#356cf6;margin-right:6px"></i>तयारीका विषयहरू</h2>  
   <span>१४ विषयहरू</span>  
- </div>   <div class="grid-container">  
+ </div>   
+
+ <div class="grid-container">  
   <div class="card card-1" onclick="openModal('Loksewa','लोकसेवा सामान्य ज्ञान')">  
    <i class="fa-solid fa-chevron-right card-arrow"></i><div class="card-icon">🇳🇵</div>  
    <div class="card-content"><h3>लोकसेवा सामान्य ज्ञान</h3><p>Loksewa GK तयारी</p></div>  
@@ -401,12 +415,18 @@ footer{padding:18px 10px;text-align:center;color:#8995a8;font-size:11px}
    <div class="card-content"><h3>कम्प्युटर अपरेटर</h3><p>MCQ & Practical</p></div>  
   </div>  
  </div>  
-</main>  <footer>© <span id="year"></span> नेपाल तयारी · सिक्दै जानुहोस्, सफल बन्दै जानुहोस्।</footer>  <nav class="bottom-nav">  
+</main>  
+
+<footer>© <span id="year"></span> नेपाल तयारी · सिक्दै जानुहोस्, सफल बन्दै जानुहोस्।</footer>  
+
+<nav class="bottom-nav">  
  <a href="index.html" class="nav-item active"><i class="fa-solid fa-house"></i><span>Home</span></a>  
  <a href="vacancy.html" class="nav-item"><i class="fa-solid fa-file-lines"></i><span>Vacancy</span></a>  
  <a href="news.html" class="nav-item"><i class="fa-solid fa-bell"></i><span>News</span></a>  
  <a href="more.html" class="nav-item"><i class="fa-solid fa-bars"></i><span>More</span></a>  
-</nav>  <div id="quizModal" class="modal">  
+</nav>  
+
+<div id="quizModal" class="modal">  
  <div class="modal-content">  
   <h2 id="modalTitle">विषयको नाम</h2>  
   <p>तलबाट आफ्नो अभ्यास विधि छान्नुहोस्।</p>  
@@ -423,28 +443,38 @@ footer{padding:18px 10px;text-align:center;color:#8995a8;font-size:11px}
    </div>  
   </div>  
  </div>  
-</div>  <div id="fullScreenAd" class="overlay">  
+</div>  
+
+<div id="fullScreenAd" class="overlay">  
  <div class="ad-box">  
   <h3 style="color:#dc3545">📢 Sponsored Ad</h3>  
   <p>कृपया विज्ञापन बन्द गरेर अर्को सेट सुरु गर्नुहोस्।</p>  
-  <div class="ad-placeholder">विज्ञापन क्षेत्र</div>  
-  <button class="skip-ad-btn" onclick="closeFullScreenAd()">विज्ञापन बन्द गर्नुहोस् (Skip)</button>  
+  <div class="ad-placeholder" id="adPlaceholderText">विज्ञापन लोड हुँदैछ...</div>  
+  <button class="skip-ad-btn" id="skipAdBtn" style="display:none;" onclick="closeFullScreenAd()">विज्ञापन बन्द गर्नुहोस् (Skip)</button>  
  </div>  
-</div>  <div id="customPopup" class="overlay">  
+</div>  
+
+<div id="customPopup" class="overlay">  
  <div class="popup-box">  
   <h3 id="popupHeaderTitle" style="color:#07865d">🎉 बधाई छ!</h3>  
   <p id="popupMessage">यो सेट पूरा भयो।</p>  
   <button class="popup-ok-btn" onclick="handlePopupOk()">OK (अर्को सेट)</button>  
  </div>  
-</div>  <div id="customAlertModal" class="overlay">  
+</div>  
+
+<div id="customAlertModal" class="overlay">  
  <div class="custom-alert-box">  
   <h3>सूचना</h3>  
   <p id="customAlertMessage">सन्देश यहाँ आउनेछ।</p>  
   <button class="custom-alert-btn" onclick="closeCustomAlert()">ठीक छ (OK)</button>  
  </div>  
-</div>  <div id="quizScreen">  
+</div>  
+
+<div id="quizScreen">  
  <div class="quiz-wrapper" id="screenContent"></div>  
-</div>  <script type="module">  
+</div>  
+
+<script type="module">  
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";  
 import {  
  getFirestore, collection, getDocs, query, where,  
@@ -550,6 +580,7 @@ window.closeQuizScreen = function() {
  timerInterval = null;  
  quizScreen.style.display = "none";  
 };  
+  
 window.closeFullScreenAd = function() {  
  fullScreenAd.style.display = "none";  
  if (pendingNextAction) {  
@@ -563,20 +594,27 @@ function loadBannerAds() {
  ["topBannerAd","bottomBannerAd"].forEach(id => window.loadDynamicBannerAd(id));  
 }  
   
+// AdMob / AdSense Dynamic Banner Loader
 window.loadDynamicBannerAd = function(containerId) {  
  const container = document.getElementById(containerId);  
  if (!container || container.dataset.adLoaded === "true") return;  
  container.dataset.adLoaded = "true";  
   
- const optionsScript = document.createElement("script");  
- optionsScript.type = "text/javascript";  
- optionsScript.text = "atOptions = {'key':'be488ae5e4d2e4e21d6d31f50076d971','format':'iframe','height':50,'width':320,'params':{}};";  
- container.appendChild(optionsScript);  
+ const adElement = document.createElement("ins");  
+ adElement.className = "adsbygoogle";  
+ adElement.style.display = "block";  
+ adElement.style.width = "320px";  
+ adElement.style.height = "50px";  
+ adElement.setAttribute("data-ad-client", "ca-pub-3940256099942544"); // Demo Client ID
+ adElement.setAttribute("data-ad-slot", "9214589741"); // Demo Banner Slot ID
   
- const invokeScript = document.createElement("script");  
- invokeScript.type = "text/javascript";  
- invokeScript.src = "https://www.highrevenueformat.com/be488ae5e4d2e4e21d6d31f50076d971/invoke.js";  
- container.appendChild(invokeScript);  
+ container.appendChild(adElement);  
+  
+ try {  
+  (window.adsbygoogle = window.adsbygoogle || []).push({});  
+ } catch(e) {  
+  console.error("AdMob load error:", e);  
+ }  
 };  
   
 function processQuestionsIntoSets(rawQuestions) {  
@@ -809,7 +847,7 @@ window.loadQuizQuestion = function() {
    if (!navigator.onLine) {  
     clearInterval(timerInterval);  
     window.closeQuizScreen();  
-    window.showAlert("इन्टरनेट विच्छेद भयो। Live Quiz बन्द गरिएको छ।");  
+    window.showAlert("इन्टरनेट जडान विच्छेद भयो। Live Quiz बन्द गरिएको छ।");  
     return;  
    }  
    timeLeft--;  
@@ -877,7 +915,17 @@ window.handlePopupOk = function() {
  activeQuestions = allSetsData[availableSets[currentSetIndex]] || [];  
  currentQuestionIndex = 0;  
  pendingNextAction = () => window.loadQuizQuestion();  
+   
+ const adPlaceholder = document.getElementById("adPlaceholderText");  
+ const skipBtn = document.getElementById("skipAdBtn");  
+ adPlaceholder.textContent = "विज्ञापन लोड हुँदैछ...";  
+ skipBtn.style.display = "none";  
  fullScreenAd.style.display = "flex";  
+   
+ setTimeout(() => {  
+  adPlaceholder.textContent = "विज्ञापन क्षेत्र";  
+  skipBtn.style.display = "block";  
+ }, 1200);  
 };  
   
 window.addEventListener("click",event => {  
@@ -898,5 +946,6 @@ if ("serviceWorker" in navigator) {
    .catch(err => console.log("Service Worker registration failed",err));  
  });  
 }  
-</script>  </body>  
-</html>  
+</script>  
+</body>  
+</html>
