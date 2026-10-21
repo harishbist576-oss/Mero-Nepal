@@ -272,7 +272,7 @@ header p{margin:5px 0 0;font-size:13px;color:#dce7ff;font-weight:500}
 .banner-ad{  
  width:100%;max-width:320px;min-height:50px;margin:8px auto;  
  display:flex;align-items:center;justify-content:center;  
- overflow:hidden;flex-shrink:0  
+ overflow:hidden;flex-shrink:0; background:#f9fbfd; border:1px dashed #dce3ee; border-radius:8px;
 }  
 .reading-question-card{padding:15px;margin-bottom:13px}  
 .reading-ad-card{padding:12px;margin-bottom:13px;text-align:center;border-color:#dce5f5}  
@@ -591,10 +591,10 @@ window.closeFullScreenAd = function() {
 };  
   
 function loadBannerAds() {  
- ["topBannerAd","bottomBannerAd"].forEach(id => window.loadDynamicBannerAd(id));  
+ window.loadDynamicBannerAd("topBannerAd");  
 }  
   
-// AdMob / AdSense Dynamic Banner Loader
+// AdMob / AdSense Dynamic Banner Loader (AppCreator24 WebView Safe)
 window.loadDynamicBannerAd = function(containerId) {  
  const container = document.getElementById(containerId);  
  if (!container || container.dataset.adLoaded === "true") return;  
@@ -602,11 +602,11 @@ window.loadDynamicBannerAd = function(containerId) {
   
  const adElement = document.createElement("ins");  
  adElement.className = "adsbygoogle";  
- adElement.style.display = "block";  
+ adElement.style.display = "inline-block";  
  adElement.style.width = "320px";  
  adElement.style.height = "50px";  
- adElement.setAttribute("data-ad-client", "ca-pub-3940256099942544"); // Demo Client ID
- adElement.setAttribute("data-ad-slot", "9214589741"); // Demo Banner Slot ID
+ adElement.setAttribute("data-ad-client", "ca-pub-3940256099942544"); // आफ्नो AdMob Client ID राख्नुहोला
+ adElement.setAttribute("data-ad-slot", "9214589741"); // आफ्नो AdMob Banner Slot ID राख्नुहोला
   
  container.appendChild(adElement);  
   
@@ -835,8 +835,7 @@ window.loadQuizQuestion = function() {
    <div class="question-box">${escapeHtml(q.question || "प्रश्न उपलब्ध छैन")}</div>  
    ${optionsHtml || '<p>यस प्रश्नका विकल्प उपलब्ध छैनन्।</p>'}  
    <button class="close-btn" onclick="closeQuizScreen()">बन्द गर्नुहोस्</button>  
-  </div>  
-  <div class="banner-ad" id="bottomBannerAd"></div>`;  
+  </div>`;  
   
  setTimeout(loadBannerAds,100);  
   
@@ -941,10 +940,13 @@ function escapeHtml(value) {
   
 if ("serviceWorker" in navigator) {  
  window.addEventListener("load",() => {  
-  navigator.serviceWorker.register("/sw.js")  
-   .then(reg => console.log("Service Worker registered",reg))  
-   .catch(err => console.log("Service Worker registration failed",err));  
+  preloadServiceWorker();  
  });  
+}  
+function preloadServiceWorker(){  
+ navigator.serviceWorker.register("/sw.js")  
+  .then(reg => console.log("Service Worker registered",reg))  
+  .catch(err => console.log("Service Worker registration failed",err));  
 }  
 </script>  
 </body>  
