@@ -53,7 +53,6 @@
             margin-bottom: 30px;
         }
 
-        /* समाचार कार्ड - स्क्रिनको वारपार (Full Width) */
         .news-card {
             background: var(--card-bg);
             border-radius: 0;
@@ -69,7 +68,6 @@
             border-color: #3b82f6;
         }
 
-        /* थम्बनेल - full width वारपार */
         .thumbnail-box {
             width: 100%;
             aspect-ratio: 16 / 9;
@@ -147,7 +145,6 @@
             transform: scale(1.05);
         }
 
-        /* Full Screen Reading Modal */
         #fullScreenModal {
             display: none;
             position: fixed;
@@ -188,7 +185,6 @@
             font-weight: 600;
         }
         
-        /* Modal Image - १००% कुनादेखि कुनासम्म वारपार */
         .modal-image-container {
             width: 100vw;
             position: relative;
@@ -224,8 +220,23 @@
             overflow-wrap: break-word;
         }
 
-        /* Ads बक्स पारदर्शी */
-        .modal-ad-box {
+        /* 300x250 Ad Box (पारदर्शी) */
+        .modal-ad-box-300x250 {
+            width: 100%;
+            max-width: 300px;
+            min-height: 250px;
+            margin: 15px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Top Banner Ad Box (320x50) */
+        .modal-ad-box-top {
             width: 100%;
             max-width: 320px;
             min-height: 50px;
@@ -274,7 +285,6 @@
         .btn-wa { background-color: #25d366; }
         .btn-tk { background-color: #000000; }
 
-        /* बन्द गर्नुहोस् (Close) बटन */
         .close-modal-btn {
             background: #0f172a;
             color: #ffffff;
@@ -294,7 +304,6 @@
             background: #1e293b;
         }
 
-        /* Bottom Navigation Bar Styles */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%;
             background: #ffffff;
@@ -384,7 +393,32 @@
 
         let newsList = [];
 
-        window.loadDynamicBannerAd = function(containerId) {
+        // 300x250 Ad Load Function
+        window.load300x250Ad = function(containerId) {
+            if (!navigator.onLine) return;
+            const container = document.getElementById(containerId);
+            if (!container || container.dataset.adLoaded === "true") return;
+            container.dataset.adLoaded = "true";
+
+            const adElement = document.createElement("ins");
+            adElement.className = "adsbygoogle";
+            adElement.style.display = "inline-block";
+            adElement.style.width = "300px";
+            adElement.style.height = "250px";
+            adElement.setAttribute("data-ad-client", "ca-pub-3940256099942544");
+            adElement.setAttribute("data-ad-slot", "9214589741");
+
+            container.appendChild(adElement);
+
+            try {
+                (window.adsbygoogle = window.adsbygoogle || []).push({});
+            } catch(e) {
+                console.error("AdMob load error:", e);
+            }
+        };
+
+        // Top Banner Ad (320x50) Load Function
+        window.loadTopBannerAd = function(containerId) {
             if (!navigator.onLine) return;
             const container = document.getElementById(containerId);
             if (!container || container.dataset.adLoaded === "true") return;
@@ -431,7 +465,7 @@
             if (!text) return '';
             const words = text.trim().split(/\s+/);
             if (words.length <= limit) return text;
-            return words.slice(0, limit).join(' ') + '...';
+            return words.slice(0, limit).join(' ');
         }
 
         function getRemainingWords(text, limit) {
@@ -472,7 +506,6 @@
             let item = newsList[index];
             if (!item) return;
 
-            // भ्युज बाहिरी प्रयोगकर्तालाई नदेखाए पनि Firestore मा सेभ / अपडेट भइरहन्छ (Admin Panel को लागि)
             try {
                 const newsRef = doc(db, "news", item.id);
                 await updateDoc(newsRef, {
@@ -485,8 +518,8 @@
             let modalImgTag = item.imageUrl ? `<div class="modal-image-container"><img src="${item.imageUrl}" alt="Detail Banner"></div>` : '';
 
             let fullText = item.description || 'विस्तृत विवरण उपलब्ध छैन।';
-            let first50Words = truncateWords(fullText, 50);
-            let remainingText = getRemainingWords(fullText, 50);
+            let first70Words = truncateWords(fullText, 70);
+            let remainingText = getRemainingWords(fullText, 70);
 
             modalContentArea.innerHTML = `
                 <div class="modal-padded-content">
@@ -497,18 +530,21 @@
                         <span><i class="fa-regular fa-calendar"></i> ${item.date || ''}</span>
                     </div>
 
-                    <div class="modal-ad-box" id="topNewsAd"></div>
+                    <div class="modal-ad-box-top" id="topNewsAd"></div>
                 </div>
 
                 ${modalImgTag}
 
                 <div class="modal-padded-content">
+                    <!-- पहिलो ७० शब्द -->
                     <div class="modal-description-box">
-                        <div class="modal-description">${first50Words}</div>
+                        <div class="modal-description">${first70Words}</div>
                     </div>
 
-                    <div class="modal-ad-box" id="middleNewsAd"></div>
+                    <!-- ७० शब्द पछि ३००×२५० को ठूलो Ads -->
+                    <div class="modal-ad-box-300x250" id="middle300x250Ad"></div>
 
+                    <!-- सोसल मिडिया फलो बक्स -->
                     <div class="social-follow-box">
                         <div class="social-title">हामीलाई Follow गर्नुहोस्:</div>
                         <div class="social-icons">
@@ -518,6 +554,7 @@
                         </div>
                     </div>
 
+                    <!-- ७० शब्द पछिको बाँकी टेक्स्ट -->
                     ${remainingText ? `
                     <div class="modal-description-box">
                         <div class="modal-description">${remainingText}</div>
@@ -532,8 +569,8 @@
             fullScreenModal.scrollTop = 0;
 
             setTimeout(() => {
-                window.loadDynamicBannerAd("topNewsAd");
-                window.loadDynamicBannerAd("middleNewsAd");
+                window.loadTopBannerAd("topNewsAd");
+                window.load300x250Ad("middle300x250Ad");
             }, 100);
         }
 
