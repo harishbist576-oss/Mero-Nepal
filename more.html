@@ -5,19 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>थप सामग्रीहरू (More Content)</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#000000">
+    <meta name="theme-color" content="#ffffff">
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; }
         :root {
-            --bg-color: #121212; /* पूर्ण कालो ब्याकग्राउन्ड */
-            --card-bg: #1e1e1e; /* कार्डहरूको लागि गाढा रङ */
-            --card-border: rgba(255, 255, 255, 0.08);
-            --text-main: #f8fafc; /* मुख्य सेतो अक्षर */
-            --text-sub: #94a3b8; /* हल्का खरानी अक्षर */
-            --accent-color: #38bdf8;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #111827;
+            --text-sub: #6b7280;
+            --accent-color: #2563eb;
         }
         body {
-            font-family: "Kalimati", "Mukta", "Gautami", Arial, sans-serif;
+            font-family: 'Mukta', 'Roboto', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0; padding: 0 0 100px 0;
@@ -25,24 +25,24 @@
         }
         
         header {
-            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             color: #ffffff; 
-            padding: 20px; 
+            padding: 22px 20px; 
             border-bottom: 4px solid #f59e0b;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: relative;
         }
         .header-title-box h1 { margin: 0; font-size: 22px; font-weight: 800; color: #ffffff; }
-        .header-title-box p { margin: 4px 0 0 0; font-size: 14px; font-weight: 600; color: #cbd5e1; }
+        .header-title-box p { margin: 4px 0 0 0; font-size: 13px; font-weight: 500; color: #cbd5e1; }
 
         .right-menu-btn {
-            background: #2a2a2a;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.25);
             color: #ffffff;
-            width: 42px; height: 42px;
+            width: 40px; height: 40px;
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -51,40 +51,38 @@
             cursor: pointer;
             transition: background 0.2s;
         }
-        .right-menu-btn:hover { background: #3a3a3a; }
+        .right-menu-btn:hover { background: rgba(255, 255, 255, 0.25); }
 
-        .container { width: 100%; max-width: 800px; margin: 16px auto; padding: 0 12px; }
+        .container { width: 100%; max-width: 800px; margin: 0 auto; padding: 0; }
 
         .content-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-        }
-        @media(min-width: 600px) {
-            .content-grid { grid-template-columns: repeat(2, 1fr); gap: 18px; }
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
         }
 
         .content-card {
             background: var(--card-bg);
-            border-radius: 16px;
+            border-radius: 0;
             overflow: hidden;
-            border: 2px solid var(--card-border);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border-top: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
             cursor: pointer;
-            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
         }
         .content-card:hover {
-            transform: translateY(-5px);
             border-color: #3b82f6;
-            box-shadow: 0 15px 30px rgba(59, 130, 246, 0.2);
         }
 
+        /* थम्बनेल - full width वारपार */
         .thumbnail-box {
             width: 100%;
             aspect-ratio: 16 / 9;
-            background-color: #2a2a2a;
+            background-color: #e2e8f0;
             position: relative;
             overflow: hidden;
             display: flex;
@@ -94,137 +92,149 @@
         .thumbnail-box img {
             width: 100%; height: 100%;
             object-fit: cover;
+            display: block;
         }
         .play-icon-overlay {
             position: absolute;
-            width: 45px; height: 45px;
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid rgba(255,255,255,0.2);
+            width: 48px; height: 48px;
+            background: rgba(0, 0, 0, 0.75);
+            border: 2px solid rgba(255,255,255,0.8);
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            color: #ffffff; font-size: 16px;
+            color: #ffffff; font-size: 18px;
         }
 
-        .card-info { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+        .card-info { padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; }
         .card-title { 
-            font-size: 17px; 
-            font-weight: 700; 
+            font-size: 18px; 
+            font-weight: 800; 
             color: var(--text-main); 
             margin: 0; 
-            line-height: 1.45; 
-            font-family: "Kalimati", "Mukta", sans-serif;
+            line-height: 1.4; 
         }
-        .card-date { font-size: 12px; color: #38bdf8; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+        .card-date { font-size: 12px; color: #0284c7; font-weight: 700; display: flex; align-items: center; gap: 6px; }
 
-        /* फुलस्क्रिन मोडल (पूर्ण कालो) */
+        /* फुलस्क्रिन मोडल (सेतो ब्याकग्राउन्ड) */
         #fullScreenModal {
             display: none;
             position: fixed;
             z-index: 9999;
             left: 0; top: 0;
             width: 100vw; height: 100vh;
-            background-color: #000000;
+            background-color: #ffffff;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
-            padding: 20px;
+            padding: 0;
             box-sizing: border-box;
         }
         .modal-inner {
-            width: 100%; max-width: 700px; margin: 0 auto;
-            padding: 10px 0 70px 0; display: flex; flex-direction: column;
+            width: 100%; max-width: 800px; margin: 0 auto;
+            background: #ffffff; padding: 0; display: flex; flex-direction: column;
             min-height: 100%; justify-content: space-between;
         }
         
+        .modal-padded-content {
+            padding: 15px 18px 0 18px;
+        }
+
         .modal-header-title { 
             font-size: 22px; 
-            font-weight: 700; 
-            color: #f87171; 
+            font-weight: 800; 
+            color: #111827; 
             margin-bottom: 12px; 
-            line-height: 1.45;
+            line-height: 1.4;
             word-break: break-word;
-            font-family: "Kalimati", "Mukta", sans-serif;
         }
-        .modal-date { font-size: 13px; color: #38bdf8; margin-bottom: 15px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+        .modal-date { font-size: 13px; color: #6b7280; margin-bottom: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
         
         .video-container {
             position: relative; width: 100%; aspect-ratio: 16 / 9;
-            background: #000; border-radius: 12px; overflow: hidden;
-            margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.1);
+            background: #000; overflow: hidden;
+            margin-bottom: 18px;
         }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
 
+        /* Modal Image - १००% कुनादेखि कुनासम्म वारपार */
         .modal-image-container {
-            width: 100%; max-height: 50vh; margin-bottom: 16px;
-            border-radius: 12px; overflow: hidden; background: #1e1e1e;
-            border: 1px solid rgba(255,255,255,0.1);
-            display: flex; align-items: center; justify-content: center;
+            width: 100vw;
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
+            margin-top: 10px;
+            margin-bottom: 18px;
+            overflow: hidden;
+            background: #f1f5f9;
         }
-        .modal-image-container img { width: 100%; height: auto; max-height: 50vh; object-fit: contain; display: block; }
+        .modal-image-container img { width: 100%; height: auto; display: block; }
 
         .modal-text-card {
-            background: #111111;
-            border: 1px solid #333333;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            background: #ffffff;
+            padding: 0;
+            margin-bottom: 18px;
         }
 
         .modal-description {
-            font-size: 17px; 
-            color: #ffffff; 
-            line-height: 1.8; 
-            font-weight: 700; 
-            text-align: justify; 
-            word-break: break-word;
+            font-size: 18px; 
+            color: #1f2937; 
+            line-height: 1.75; 
+            font-weight: 600; 
+            text-align: left; 
+            word-break: normal;
             overflow-wrap: break-word;
             margin: 0; 
             padding: 0; 
-            font-family: "Kalimati", "Mukta", sans-serif;
             white-space: pre-line;
         }
 
-        .banner-ad-container {
-            width: 100vw;
-            margin-left: calc(-50vw + 50%);
-            background: #1a1a1a;
-            border-top: 2px dashed #444444;
-            border-bottom: 2px dashed #444444;
-            border-left: none;
-            border-right: none;
-            border-radius: 0;
-            padding: 16px;
-            text-align: center;
-            margin-top: 20px;
-            margin-bottom: 20px;
-            min-height: 80px;
+        /* पारदर्शी Ads बक्स (300x250) */
+        .modal-ad-box-300x250 {
+            width: 100%;
+            max-width: 300px;
+            min-height: 250px;
+            margin: 15px auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #94a3b8;
-            font-size: 13px;
-            font-weight: 600;
+            overflow: hidden;
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Top Banner Ad Box (320x50) */
+        .modal-ad-box-top {
+            width: 100%;
+            max-width: 320px;
+            min-height: 50px;
+            margin: 12px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
         }
 
         .social-follow-box {
-            background: linear-gradient(135deg, #1f2937 100%, #111827 100%);
-            border: 1px solid #374151;
-            border-radius: 16px;
-            padding: 15px 20px;
-            margin-bottom: 16px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 14px 18px;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
         }
         .social-follow-text {
             font-size: 15px;
             font-weight: 700;
-            color: #fbbf24;
+            color: #d97706;
             margin: 0;
-            font-family: "Kalimati", "Mukta", sans-serif;
         }
         .social-icons-group {
             display: flex;
@@ -232,33 +242,38 @@
             gap: 12px;
         }
         .social-btn {
-            width: 42px; height: 42px;
+            width: 40px; height: 40px;
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             color: #ffffff;
-            font-size: 18px;
+            font-size: 17px;
             text-decoration: none;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.12);
             transition: transform 0.2s;
         }
         .social-btn:hover { transform: scale(1.08); }
         .btn-fb { background: #1877f2; }
         .btn-wa { background: #25d366; }
-        .btn-tk { background: #000000; border: 1px solid #444; }
+        .btn-tk { background: #000000; }
 
-        /* बन्द गर्नुहोस् बटन - सेतो ब्याकग्राउन्ड र कालो अक्षर */
         .close-modal-btn {
-            background: #ffffff;
-            color: #000000; border: none; padding: 14px 20px;
-            border-radius: 12px; font-size: 15px; font-weight: bold; cursor: pointer; width: 100%;
-            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
-            font-family: "Kalimati", "Mukta", sans-serif;
-            margin-top: 20px;
+            background: #0f172a;
+            color: #ffffff; 
+            border: none; 
+            padding: 14px 20px;
+            border-radius: 12px; 
+            font-size: 15px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+            margin-top: 10px;
+            margin-bottom: 40px;
             transition: background 0.2s;
         }
-        .close-modal-btn:hover { background: #e2e8f0; }
+        .close-modal-btn:hover { background: #1e293b; }
 
-        /* पप-अप मेनु (कालो थिम) */
+        /* पप-अप मेनु (सेतो थिम) */
         #popupMenu {
             display: none;
             position: fixed;
@@ -267,24 +282,24 @@
             width: 270px;
             max-height: 80vh;
             overflow-y: auto;
-            background: #1e1e1e;
+            background: #ffffff;
             border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
             z-index: 1000;
             padding: 8px;
             flex-direction: column;
             gap: 6px;
         }
         #popupMenu::-webkit-scrollbar { width: 4px; }
-        #popupMenu::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
+        #popupMenu::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 
         .popup-item {
             display: flex;
             align-items: center;
             gap: 10px;
             padding: 11px 12px;
-            color: #f8fafc;
+            color: #111827;
             text-decoration: none;
             font-size: 15px;
             font-weight: 700;
@@ -292,43 +307,42 @@
             cursor: pointer;
             transition: background 0.15s;
         }
-        .popup-item:hover { background: #2a2a2a; color: #38bdf8; }
+        .popup-item:hover { background: #f1f5f9; color: #2563eb; }
 
         .icon-circle {
             width: 34px; height: 34px;
-            background: #2a2a2a;
+            background: #f1f5f9;
             display: flex; align-items: center; justify-content: center;
-            border-radius: 50%; color: #38bdf8;
+            border-radius: 50%; color: #2563eb;
             font-size: 14px; flex-shrink: 0;
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid #e2e8f0;
         }
 
-        /* Bottom Navigation Bar (पूर्ण सेतो ब्याकग्राउन्ड र कालो/डार्क टेक्स्ट/आइकन) */
+        /* Bottom Navigation Bar */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%;
-            background: #ffffff; /* सेतो ब्याकग्राउन्ड */
+            background: #ffffff;
             backdrop-filter: blur(12px);
             display: flex; justify-content: space-around; align-items: center; 
             padding: 8px 0;
-            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.3);
-            border-top: 1px solid #cbd5e1;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.08);
+            border-top: 1px solid #e2e8f0;
             z-index: 900;
         }
         .nav-item {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-decoration: none; color: #475569; font-size: 12px; font-weight: 700;
-            padding: 6px 12px; transition: color 0.2s; gap: 3px; cursor: pointer;
+            text-decoration: none; color: #64748b; font-size: 12px; font-weight: 700;
+            padding: 6px 12px; gap: 3px; cursor: pointer;
             flex: 1;
+            transition: color 0.2s;
         }
         .nav-item i { font-size: 18px; }
-        .nav-item.active {
-            color: #0d5c3f;
-            background: transparent;
-            box-shadow: none;
-        }
-        .nav-item:hover { color: #0d5c3f; }
+        .nav-item.active { color: #2563eb; }
+        .nav-item:hover { color: #2563eb; }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google AdMob / AdSense Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3940256099942544" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -344,7 +358,7 @@
 
     <div class="container">
         <div id="contentGrid" class="content-grid">
-            <div style="text-align: center; color: var(--text-sub); grid-column: span 2; padding: 40px; font-weight: 700;">
+            <div style="text-align: center; color: var(--text-sub); padding: 40px; font-weight: bold;">
                 <i class="fa-regular fa-compass fa-2x" style="margin-bottom: 10px; display: block; color: var(--accent-color);"></i>डाटा लोड हुँदैछ...
             </div>
         </div>
@@ -352,10 +366,7 @@
 
     <div id="fullScreenModal">
         <div class="modal-inner">
-            <div>
-                <div id="modalContentArea"></div>
-            </div>
-            <button class="close-modal-btn" onclick="closeFullModal()">बन्द गर्नुहोस् (Close)</button>
+            <div id="modalContentArea"></div>
         </div>
     </div>
 
@@ -392,14 +403,12 @@
             <div class="icon-circle"><i class="fa-solid fa-landmark"></i></div>
             <span>इतिहास (History)</span>
         </div>
-        <!-- Room Rent को लागि room-rent.html मा जाने लिङ्क -->
         <a href="room-rent.html" class="popup-item">
             <div class="icon-circle"><i class="fa-solid fa-house-chimney"></i></div>
             <span>Room Rent</span>
         </a>
     </div>
 
-    <!-- Bottom Navigation Bar (सेतो ब्याकग्राउन्डसहित) -->
     <div class="bottom-nav">
         <a href="index.html" class="nav-item">
             <i class="fa-solid fa-house"></i>
@@ -421,7 +430,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, doc, updateDoc, increment, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAe32qMUjBMUBL4N6jS8eyVixK2gHMVuXw",
@@ -442,6 +451,54 @@
         let currentCategoryKey = '';
         let currentItems = [];
         let unsubscribe = null;
+
+        // 300x250 Ad Load Function
+        window.load300x250Ad = function(containerId) {
+            if (!navigator.onLine) return;
+            const container = document.getElementById(containerId);
+            if (!container || container.dataset.adLoaded === "true") return;
+            container.dataset.adLoaded = "true";
+
+            const adElement = document.createElement("ins");
+            adElement.className = "adsbygoogle";
+            adElement.style.display = "inline-block";
+            adElement.style.width = "300px";
+            adElement.style.height = "250px";
+            adElement.setAttribute("data-ad-client", "ca-pub-3940256099942544");
+            adElement.setAttribute("data-ad-slot", "9214589741");
+
+            container.appendChild(adElement);
+
+            try {
+                (window.adsbygoogle = window.adsbygoogle || []).push({});
+            } catch(e) {
+                console.error("AdMob load error:", e);
+            }
+        };
+
+        // Top Banner Ad (320x50) Load Function
+        window.loadTopBannerAd = function(containerId) {
+            if (!navigator.onLine) return;
+            const container = document.getElementById(containerId);
+            if (!container || container.dataset.adLoaded === "true") return;
+            container.dataset.adLoaded = "true";
+
+            const adElement = document.createElement("ins");
+            adElement.className = "adsbygoogle";
+            adElement.style.display = "inline-block";
+            adElement.style.width = "320px";
+            adElement.style.height = "50px";
+            adElement.setAttribute("data-ad-client", "ca-pub-3940256099942544");
+            adElement.setAttribute("data-ad-slot", "9214589741");
+
+            container.appendChild(adElement);
+
+            try {
+                (window.adsbygoogle = window.adsbygoogle || []).push({});
+            } catch(e) {
+                console.error("AdMob load error:", e);
+            }
+        };
 
         window.togglePopupMenu = function(event) {
             event.preventDefault();
@@ -471,7 +528,7 @@
             document.getElementById('pageSubtitle').innerText = 'डेटा लोड हुँदैछ...';
             
             const grid = document.getElementById('contentGrid');
-            grid.innerHTML = `<div style="text-align: center; color: var(--text-sub); grid-column: span 2; padding: 40px; font-weight: 700;">डाटा लोड हुँदैछ...</div>`;
+            grid.innerHTML = `<div style="text-align: center; color: var(--text-sub); padding: 40px; font-weight: bold;">डाटा लोड हुँदैछ...</div>`;
 
             if (unsubscribe) {
                 unsubscribe();
@@ -491,7 +548,7 @@
                     });
 
                     if (currentItems.length === 0) {
-                        grid.innerHTML = `<div style="text-align: center; color: var(--text-sub); grid-column: span 2; padding: 40px; font-weight: 700;">यस क्याटेगोरीमा हाल कुनै सामग्री उपलब्ध छैन।</div>`;
+                        grid.innerHTML = `<div style="text-align: center; color: var(--text-sub); padding: 40px; font-weight: bold;">यस क्याटेगोरीमा हाल कुनै सामग्री उपलब्ध छैन।</div>`;
                         document.getElementById('pageSubtitle').innerText = 'कुनै सामग्री छैन';
                         return;
                     }
@@ -519,7 +576,7 @@
                                     ${overlayIcon}
                                 </div>
                                 <div class="card-info">
-                                    <span class="card-date"><i class="fa-regular fa-calendar"></i> ${item.date || 'हालैको'}</span>
+                                    <div class="card-date"><i class="fa-regular fa-calendar"></i> ${item.date || 'हालैको'}</div>
                                     <h3 class="card-title">${item.title}</h3>
                                 </div>
                             </div>
@@ -529,94 +586,109 @@
                     document.getElementById('pageSubtitle').innerText = 'फुलस्क्रिन अवलोकन';
                 }, (error) => {
                     console.error("Firebase error: ", error);
-                    grid.innerHTML = `<div style="text-align: center; color: #f87171; grid-column: span 2; padding: 40px; font-weight: 700;">डाटा लोड गर्न सकिएन। इन्टरनेट जडान चेक गर्नुहोस्।</div>`;
+                    grid.innerHTML = `<div style="text-align: center; color: #dc2626; padding: 40px; font-weight: bold;">डाटा लोड गर्न सकिएन। इन्टरनेट जडान चेक गर्नुहोस्।</div>`;
                 });
             } catch (err) {
                 console.error("Error setting up snapshot: ", err);
             }
         }
 
-        function formatDescriptionWithAdsAndSocial(rawText) {
-            if (!rawText) return '';
-            
-            let words = rawText.trim().split(/\s+/);
-            if (words.length <= 50) {
-                return `
-                    <div class="modal-text-card">
-                        <div class="modal-description">${rawText}</div>
-                    </div>
-                    <div class="banner-ad-container"><span>[ ब्यानर एड (Banner Ad) यहाँ देखिनेछ ]</span></div>
-                    <div class="social-follow-box">
-                        <p class="social-follow-text">हामीलाई फलो गर्नुहोस्:</p>
-                        <div class="social-icons-group">
-                            <a href="https://www.facebook.com/gknepal400" target="_blank" class="social-btn btn-fb"><i class="fa-brands fa-facebook-f"></i></a>
-                            <a href="https://whatsapp.com/channel/0029Vb8BA4U5EjxrdYNbi62M" target="_blank" class="social-btn btn-wa"><i class="fa-brands fa-whatsapp"></i></a>
-                            <a href="https://tiktok.com/@gknepal40" target="_blank" class="social-btn btn-tk"><i class="fa-brands fa-tiktok"></i></a>
-                        </div>
-                    </div>
-                `;
-            }
-
-            let chunks = [];
-            for (let i = 0; i < words.length; i += 50) {
-                chunks.push(words.slice(i, i + 50).join(' '));
-            }
-
-            let finalHtml = '';
-            chunks.forEach((chunk) => {
-                finalHtml += `
-                    <div class="modal-text-card">
-                        <div class="modal-description">${chunk}</div>
-                    </div>
-                    <div class="banner-ad-container"><span>[ ब्यानर एड (Banner Ad) यहाँ देखिनेछ ]</span></div>
-                    <div class="social-follow-box">
-                        <p class="social-follow-text">हामीलाई फलो गर्नुहोस्:</p>
-                        <div class="social-icons-group">
-                            <a href="https://www.facebook.com/gknepal400" target="_blank" class="social-btn btn-fb"><i class="fa-brands fa-facebook-f"></i></a>
-                            <a href="https://whatsapp.com/channel/0029Vb8BA4U5EjxrdYNbi62M" target="_blank" class="social-btn btn-wa"><i class="fa-brands fa-whatsapp"></i></a>
-                            <a href="https://tiktok.com/@gknepal40" target="_blank" class="social-btn btn-tk"><i class="fa-brands fa-tiktok"></i></a>
-                        </div>
-                    </div>
-                `;
-            });
-
-            return finalHtml;
+        function truncateWords(text, limit) {
+            if (!text) return '';
+            const words = text.trim().split(/\s+/);
+            if (words.length <= limit) return text;
+            return words.slice(0, limit).join(' ');
         }
 
-        window.openDetail = function(index) {
+        function getRemainingWords(text, limit) {
+            if (!text) return '';
+            const words = text.trim().split(/\s+/);
+            if (words.length <= limit) return '';
+            return words.slice(limit).join(' ');
+        }
+
+        window.openDetail = async function(index) {
             let item = currentItems[index];
             if (!item) return;
+
+            // Views बाहिर प्रयोगकर्तालाई नदेखाए पनि Firestore मा सेभ / अपडेट भइरहन्छ (Admin Panel को लागि)
+            try {
+                const itemRef = doc(db, currentCategoryKey, item.id);
+                await updateDoc(itemRef, {
+                    views: increment(1)
+                });
+            } catch (err) {
+                console.error("Error updating views: ", err);
+            }
 
             let rawVidInput = item.videoId || item.videoLink || '';
             let cleanVideoId = getCleanYouTubeId(rawVidInput);
             let isVideoItem = (item.type === 'video' || cleanVideoId.length === 11);
 
-            let contentHTML = '';
-            let processedDescription = formatDescriptionWithAdsAndSocial(item.description || '');
+            let modalImgTag = (!isVideoItem && item.imageUrl) ? `<div class="modal-image-container"><img src="${item.imageUrl}" alt="Detail Banner"></div>` : '';
+            let videoBlock = (isVideoItem && cleanVideoId.length === 11) ? `
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/${cleanVideoId}?autoplay=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            ` : '';
 
-            if (isVideoItem && cleanVideoId.length === 11) {
-                contentHTML = `
-                    <div class="modal-date"><i class="fa-regular fa-calendar"></i> ${item.date || ''}</div>
+            let fullText = item.description || 'विस्तृत विवरण उपलब्ध छैन।';
+            let first70Words = truncateWords(fullText, 70);
+            let remainingText = getRemainingWords(fullText, 70);
+
+            let contentHTML = `
+                <div class="modal-padded-content">
                     <div class="modal-header-title">${item.title}</div>
-                    <div class="video-container">
-                        <iframe src="https://www.youtube.com/embed/${cleanVideoId}?autoplay=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    
+                    <div class="modal-date">
+                        <span><i class="fa-regular fa-user"></i> Admin Post</span>
+                        <span><i class="fa-regular fa-calendar"></i> ${item.date || ''}</span>
                     </div>
-                    ${processedDescription}
-                `;
-            } else {
-                let detailImg = item.imageUrl || '';
-                let imgBlock = detailImg ? `<div class="modal-image-container"><img src="${detailImg}" alt="Banner"></div>` : '';
-                contentHTML = `
-                    <div class="modal-date"><i class="fa-regular fa-calendar"></i> ${item.date || ''}</div>
-                    <div class="modal-header-title">${item.title}</div>
-                    ${imgBlock}
-                    ${processedDescription}
-                `;
-            }
+
+                    <div class="modal-ad-box-top" id="topMoreAd"></div>
+                </div>
+
+                ${videoBlock}
+                ${modalImgTag}
+
+                <div class="modal-padded-content">
+                    <!-- पहिलो ७० शब्द -->
+                    <div class="modal-text-card">
+                        <div class="modal-description">${first70Words}</div>
+                    </div>
+
+                    <!-- ७० शब्द पछि ३००×२५० को ठूलो Ads -->
+                    <div class="modal-ad-box-300x250" id="middle300x250Ad"></div>
+
+                    <!-- सोसल मिडिया फलो बक्स -->
+                    <div class="social-follow-box">
+                        <p class="social-follow-text">हामीलाई Follow गर्नुहोस्:</p>
+                        <div class="social-icons-group">
+                            <a href="https://www.facebook.com/gknepal400" target="_blank" class="social-btn btn-fb"><i class="fa-brands fa-facebook-f"></i></a>
+                            <a href="https://whatsapp.com/channel/0029Vb8BA4U5EjxrdYNbi62M" target="_blank" class="social-btn btn-wa"><i class="fa-brands fa-whatsapp"></i></a>
+                            <a href="https://tiktok.com/@gknepal40" target="_blank" class="social-btn btn-tk"><i class="fa-brands fa-tiktok"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- ७० शब्द पछिको बाँकी टेक्स्ट -->
+                    ${remainingText ? `
+                    <div class="modal-text-card">
+                        <div class="modal-description">${remainingText}</div>
+                    </div>` : ''}
+
+                    <button class="close-modal-btn" onclick="closeFullModal()">बन्द गर्नुहोस् (Close)</button>
+                </div>
+            `;
 
             document.getElementById('modalContentArea').innerHTML = contentHTML;
             document.getElementById('fullScreenModal').style.display = 'block';
             document.body.style.overflow = 'hidden';
+            document.getElementById('fullScreenModal').scrollTop = 0;
+
+            setTimeout(() => {
+                window.loadTopBannerAd("topMoreAd");
+                window.load300x250Ad("middle300x250Ad");
+            }, 100);
         }
 
         window.closeFullModal = function() {
@@ -635,7 +707,7 @@
             }
         });
 
-        // पेज लोड हुने बित्तिकै मेनुमा क्लिक नगरी 'YouTube कथा' अटोमेटिक लोड गराउन:
+        // पेज लोड हुँदा अटोमेटिक 'YouTube कथा' लोड हुने
         loadCategoryData('stories', 'YouTube कथा');
     </script>
 </body>
