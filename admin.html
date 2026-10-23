@@ -327,6 +327,7 @@
                 <button type="button" class="mode-btn" id="mainTabMotivation" onclick="switchMainTab('motivation')">💡 मोटिभेसन</button>
                 <button type="button" class="mode-btn" id="mainTabHistory" onclick="switchMainTab('history')">📜 इतिहास</button>
                 <button type="button" class="mode-btn" id="mainTabRoomRent" onclick="switchMainTab('roomrent')">🏠 Room Rent 🔔</button>
+                <button type="button" class="mode-btn" id="mainTabAds" onclick="switchMainTab('ads')" style="background:#0284c7; color:white;">📢 Ads Setting</button>
             </div>
 
             <form id="contentForm" onsubmit="handleContentUpload(event)">
@@ -625,12 +626,25 @@
                         <textarea id="roomDesc" rows="8" placeholder="पानी, बिजुली, पार्किङ तथा अन्य सुविधासम्बन्धी विवरण..."></textarea>
                     </div>
                 </div>
+
+                <!-- Ads Setting सेक्सन (नयाँ थपिएको) -->
+                <div id="adsSectionContainer" class="section-box">
+                    <div class="notif-badge" style="background:#e0f2fe; color:#0369a1; border-color:#bae6fd;">📢 एप/वेबसाइटमा देखिने विज्ञापन कन्फिगर गर्नुहोस्</div>
+                    <div class="form-group">
+                        <label>Ad Client ID (Publisher ID):</label>
+                        <input type="text" id="adClientInput" placeholder="ca-pub-xxxxxxxxxxxxxxxx">
+                    </div>
+                    <div class="form-group">
+                        <label>Ad Slot ID:</label>
+                        <input type="text" id="adSlotInput" placeholder="XXXXXXXXXX">
+                    </div>
+                </div>
                 
-                <button type="submit" class="upload-btn" style="margin-top: 15px;">➕ Firebase मा अपलोड गर्नुहोस्</button>
+                <button type="submit" class="upload-btn" style="margin-top: 15px;" id="submitBtnText">➕ Firebase मा अपलोड गर्नुहोस्</button>
             </form>
         </div>
 
-        <div class="manage-container">
+        <div class="manage-container" id="manageSectionBox">
             <h3 id="manageTitle">🗑️ व्यवस्थापन तथा डिलीट सेक्सन</h3>
             
             <div id="quizFilterGroup" class="form-group" style="margin-top: 15px;">
@@ -644,13 +658,13 @@
                 <p style="text-align: center; color: #94a3b8; font-size: 13px;">लोड हुँदैछ...</p>
             </div>
 
-            <button type="button" class="delete-all-btn" onclick="deleteAllCurrentSelection()">⚠️ यो सूची भएका सम्पूर्ण डेटा मेटाउनुहोस्</button>
+            <button type="button" class="delete-all-btn" id="deleteAllBtn" onclick="deleteAllCurrentSelection()">⚠️ यो सूची भएका सम्पूर्ण डेटा मेटाउनुहोस्</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, setDoc, getDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
@@ -674,14 +688,13 @@
         let activeSetCount = 0;
 
         // Firebase Authentication Check (लगइन छ कि छैन जाँच्ने)
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // यदि लगइन छ भने लगइन बक्स लुकाउने, प्यानल देखाउने
                 document.getElementById('auth-wrapper').style.display = 'none';
                 document.getElementById('main-admin-content').style.display = 'block';
                 updateAutoSetAndList();
+                await loadExistingAdSettings(); // एड्स सेटिङ लोड गर्ने
             } else {
-                // लगइन छैन भने लगइन बक्स मात्र देखाउने, प्यानल लुकाउने
                 document.getElementById('auth-wrapper').style.display = 'block';
                 document.getElementById('main-admin-content').style.display = 'none';
             }
@@ -704,9 +717,7 @@
 
         // बाहिरिने (Logout) ग्लोबल फंक्सन
         window.logoutAdmin = function() {
-            signOut(auth).then(() => {
-                // सफल Logout
-            }).catch((error) => {
+            signOut(auth).then(() => {}).catch((error) => {
                 console.error("Logout Error", error);
             });
         }
@@ -720,7 +731,6 @@
             });
         }
 
-        // फोटो ImgBB मा अपलोड गरेर Direct URL ल्याउने फंक्शन
         async function uploadImageToImgBB(file) {
             let base64Image = await getBase64(file);
             let base64Data = base64Image.split(',')[1]; 
@@ -767,7 +777,7 @@
             console.log(`[Push Notification Sent] Topic: ${targetTopic}, Title: ${titleText}`);
         }
 
-        const allTabsList = ['quiz', 'news', 'vacancy', 'ramayana', 'mahabharat', 'shivpuran', 'nepalikatha', 'story', 'shayari', 'motivation', 'history', 'roomrent'];
+        const allTabsList = ['quiz', 'news', 'vacancy', 'ramayana', 'mahabharat', 'shivpuran', 'nepalikatha', 'story', 'shayari', 'motivation', 'history', 'roomrent', 'ads'];
 
         window.switchMainTab = function(tab) {
             activeMainTab = tab;
@@ -785,15 +795,41 @@
             if (activeSec) activeSec.classList.add('active');
 
             let filterGroup = document.getElementById('quizFilterGroup');
+            let manageBox = document.getElementById('manageSectionBox');
+            let submitBtn = document.getElementById('submitBtnText');
 
             if (tab === 'quiz') {
                 filterGroup.style.display = 'block';
+                manageBox.style.display = 'block';
                 document.getElementById('manageTitle').textContent = '🗑️ क्विज प्रश्न व्यवस्थापन सेक्सन';
+                submitBtn.textContent = "➕ Firebase मा अपलोड गर्नुहोस्";
                 updateAutoSetAndList();
+            } else if (tab === 'ads') {
+                filterGroup.style.display = 'none';
+                manageBox.style.display = 'none'; // एड्स सेटिङमा डिलीट बक्स लुकाउने
+                submitBtn.textContent = "💾 विज्ञापनको सेटिङ सेभ गर्नुहोस्";
+                loadExistingAdSettings();
             } else {
                 filterGroup.style.display = 'none';
+                manageBox.style.display = 'block';
                 document.getElementById('manageTitle').textContent = `🗑️ ${tab.toUpperCase()} व्यवस्थापन तथा डिलीट सेक्सन`;
+                submitBtn.textContent = "➕ Firebase मा अपलोड गर्नुहोस्";
                 loadManageData();
+            }
+        }
+
+        // फायरबेसबाट पहिले सेभ भएका एड्स सेटिङ इनपुटमा लोड गर्ने
+        async function loadExistingAdSettings() {
+            try {
+                const docRef = doc(db, "settings", "ads");
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if (data.adClient) document.getElementById('adClientInput').value = data.adClient;
+                    if (data.adSlot) document.getElementById('adSlotInput').value = data.adSlot;
+                }
+            } catch (e) {
+                console.error("Load Ad settings error:", e);
             }
         }
 
@@ -887,6 +923,25 @@
             e.preventDefault();
 
             try {
+                // यदि Ads Tab मा हुनुहुन्छ भने सेटिङ सेभ गर्ने
+                if (activeMainTab === 'ads') {
+                    let clientVal = document.getElementById('adClientInput').value.trim();
+                    let slotVal = document.getElementById('adSlotInput').value.trim();
+
+                    // settings/ads डकुमेन्टमा सेभ गर्ने (जुन मुख्य एपले तान्छ)
+                    await setDoc(doc(db, "settings", "ads"), {
+                        adClient: clientVal,
+                        adSlot: slotVal,
+                        updatedAt: new Date()
+                    });
+
+                    let successMsg = document.getElementById('successMsg');
+                    successMsg.textContent = "✅ विज्ञापनको आईडी सफलतापूर्वक अपडेट भयो!";
+                    successMsg.style.display = 'block';
+                    setTimeout(() => { successMsg.style.display = 'none'; }, 3000);
+                    return;
+                }
+
                 let collectionName = "";
                 let dataObj = { createdAt: new Date() };
                 let notificationTitle = "";
@@ -1144,6 +1199,7 @@
 
                 loadManageData();
                 let successMsg = document.getElementById('successMsg');
+                successMsg.textContent = "✅ सफलतापूर्वक सेभ भयो र नोटिफिकेसन पठाइयो!";
                 successMsg.style.display = 'block';
                 setTimeout(() => { successMsg.style.display = 'none'; }, 3000);
 
@@ -1172,6 +1228,7 @@
         }
 
         window.loadManageData = async function() {
+            if (activeMainTab === 'ads') return;
             let container = document.getElementById('questionListContainer');
             container.innerHTML = '<p style="text-align: center; color: #94a3b8; font-size: 13px;">लोड हुँदैछ...</p>';
 
@@ -1200,8 +1257,6 @@
                 }
 
                 let index = 0;
-                querySnapshot.querySnapshot?.forEach ? querySnapshot.forEach((docSnap) => {}) : null; // Safe fallback
-                
                 querySnapshot.forEach((docSnap) => {
                     index++;
                     let item = docSnap.data();
