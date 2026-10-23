@@ -269,10 +269,11 @@ header p{margin:5px 0 0;font-size:13px;color:#dce7ff;font-weight:500}
  flex-shrink:0;width:29px;height:29px;border-radius:9px;  
  background:#e8efff;color:#285cdb;font-size:12px;font-weight:800  
 }  
+/* पारदर्शी विज्ञापन क्षेत्र (Transparent Banner Container) */  
 .banner-ad{  
  width:100%;max-width:320px;min-height:50px;margin:8px auto;  
  display:flex;align-items:center;justify-content:center;  
- overflow:hidden;flex-shrink:0; background:#f9fbfd; border:1px dashed #dce3ee; border-radius:8px;
+ overflow:hidden;flex-shrink:0; background:none !important; border:none !important; box-shadow:none !important;  
 }  
 .reading-question-card{padding:15px;margin-bottom:13px}  
 .reading-ad-card{padding:12px;margin-bottom:13px;text-align:center;border-color:#dce5f5}  
@@ -591,10 +592,12 @@ window.closeFullScreenAd = function() {
 };  
   
 function loadBannerAds() {  
- window.loadDynamicBannerAd("topBannerAd");  
+ if (navigator.onLine) {
+  window.loadDynamicBannerAd("topBannerAd");  
+ }
 }  
   
-// AdMob / AdSense Dynamic Banner Loader (AppCreator24 WebView Safe)
+// AdMob / AdSense Dynamic Banner Loader (इन्टरनेट हुँदा मात्र चल्ने)
 window.loadDynamicBannerAd = function(containerId) {  
  const container = document.getElementById(containerId);  
  if (!container || container.dataset.adLoaded === "true") return;  
@@ -605,8 +608,8 @@ window.loadDynamicBannerAd = function(containerId) {
  adElement.style.display = "inline-block";  
  adElement.style.width = "320px";  
  adElement.style.height = "50px";  
- adElement.setAttribute("data-ad-client", "ca-pub-3940256099942544"); // आफ्नो AdMob Client ID राख्नुहोला
- adElement.setAttribute("data-ad-slot", "9214589741"); // आफ्नो AdMob Banner Slot ID राख्नुहोला
+ adElement.setAttribute("data-ad-client", "ca-pub-3940256099942544");
+ adElement.setAttribute("data-ad-slot", "9214589741");
   
  container.appendChild(adElement);  
   
@@ -622,16 +625,7 @@ function processQuestionsIntoSets(rawQuestions) {
  for (let i=0;i<rawQuestions.length;i+=50) {  
   allSetsData[`Set ${Math.floor(i/50)+1}`] = rawQuestions.slice(i,i+50);  
  }  
- if (!Object.keys(allSetsData).length) allSetsData["Set 1"] = [];  
  availableSets = Object.keys(allSetsData);  
-}  
-  
-function getDemoQuestions() {  
- return Array.from({length:120},(_,i)=>({  
-  question:`${selectedCategoryTitle} डेमो प्रश्न नं ${i+1}`,  
-  options:["अप्सन क ✅","अप्सन ख","अप्सन ग","अप्सन घ"],  
-  correctAnswer:"अप्सन क"  
- }));  
 }  
   
 function getOptionInfo(opt) {  
@@ -643,8 +637,10 @@ function getOptionInfo(opt) {
   
 window.startQuiz = async function(mode) {  
  window.closeModal();  
+
+ // Live Quiz को लागि इन्टरनेट अनिवार्य हुनुपर्छ
  if (mode === "live" && !navigator.onLine) {  
-  window.showAlert("इन्टरनेट जडान छैन। Live Quiz का लागि इन्टरनेट अन गर्नुहोस्।");  
+  window.showAlert("Live Quiz खेल्नका लागि अनिवार्य इन्टरनेट जडान हुनुपर्छ। कृपया इन्टरनेट अन गर्नुहोस्।");  
   return;  
  }  
   
@@ -655,29 +651,58 @@ window.startQuiz = async function(mode) {
  correctScore = 0;  
  wrongScore = 0;  
  screenContent.innerHTML = '<div class="quiz-container-box loading-text">कृपया प्रश्नहरू लोड हुन पर्खनुहोस्...</div>';  
-  
+
+ const cacheKey = `cached_q_${selectedCategoryKey}_${mode}`;
+
  try {  
-  const qRef = query(  
-   collection(db,"questions"),  
-   where("category","==",selectedCategoryKey),  
-   where("mode","==",mode)  
-  );  
-  const snapshot = await getDocs(qRef);  
-  let rawQuestions = [];  
-  snapshot.forEach(docSnap => rawQuestions.push(docSnap.data()));  
+  let rawQuestions = [];
+
+  // अनलाइन हुँदा Firebase बाट नयाँ डाटा तान्ने र लोकल स्टोरेजमा सेभ गर्ने
+  if (navigator.onLine) {
+   const qRef = query(  
+    collection(db,"questions"),  
+    where("category","==",selectedCategoryKey),  
+    where("mode","==",mode)  
+   );  
+   const snapshot = await getDocs(qRef);  
+   snapshot.forEach(docSnap => rawQuestions.push(docSnap.data()));  
+   if (rawQuestions.length > 0) {
+    localStorage.setItem(cacheKey, JSON.stringify(rawQuestions));
+   }
+  } else {
+   // अफलाइन हुँदा अघि सेभ भएको डाटा लोकल स्टोरेजबाट तान्ने (Test Quiz को लागि)
+   const localData = localStorage.getItem(cacheKey);
+   if (localData) {
+    rawQuestions = JSON.parse(localData);
+   }
+  }
   
-  if (!rawQuestions.length) rawQuestions = getDemoQuestions();  
+  if (!rawQuestions.length) {  
+   window.closeQuizScreen();  
+   if (!navigator.onLine) {
+    window.showAlert("अफलाइन मोडमा प्रश्नहरू उपलब्ध भएनन्। एकपटक इन्टरनेट अन गरेर प्रश्न लोड गर्नुहोस्।");
+   } else {
+    window.showAlert(`यस विषयमा हाल ${mode === 'live' ? 'Live Quiz' : 'Test Quiz'} का प्रश्नहरू उपलब्ध छैनन्।`);  
+   }
+   return;  
+  }  
+
   processQuestionsIntoSets(rawQuestions);  
   activeQuestions = allSetsData[availableSets[0]];  
   window.loadQuizQuestion();  
  } catch(error) {  
   console.error("Error fetching questions:",error);  
-  if (mode === "live") {  
+  // यदि नेटवर्क इरर आयो तर लोकल स्टोरेजमा छ भने अफलाइन चलाउने
+  const localData = localStorage.getItem(cacheKey);
+  if (mode === "test" && localData) {
+   let rawQuestions = JSON.parse(localData);
+   processQuestionsIntoSets(rawQuestions);  
+   activeQuestions = allSetsData[availableSets[0]];  
+   window.loadQuizQuestion();
+  } else {
    window.closeQuizScreen();  
-   window.showAlert("Live Quiz लोड गर्न सकिएन। इन्टरनेट वा Firebase जडान जाँच गर्नुहोस्।");  
-   return;  
-  }  
-  screenContent.innerHTML = '<div class="quiz-container-box loading-text" style="color:#dc3545">प्रश्नहरू लोड गर्न सकिएन। इन्टरनेट जडान जाँच गर्नुहोस्।</div>';  
+   window.showAlert("प्रश्नहरू लोड गर्न सकिएन।");  
+  }
  }  
 };  
   
@@ -686,12 +711,37 @@ window.openReadingBookSets = async function() {
  quizScreen.style.display = "flex";  
  screenContent.innerHTML = '<div class="quiz-container-box loading-text">Reading Book सेटहरू लोड हुँदैछन्...</div>';  
   
+ const cacheKey = `cached_q_${selectedCategoryKey}_reading`;
+
  try {  
-  const qRef = query(collection(db,"questions"),where("category","==",selectedCategoryKey));  
-  const snapshot = await getDocs(qRef);  
-  let rawQuestions = [];  
-  snapshot.forEach(docSnap => rawQuestions.push(docSnap.data()));  
-  if (!rawQuestions.length) rawQuestions = getDemoQuestions();  
+  let rawQuestions = [];
+
+  if (navigator.onLine) {
+   const qRef = query(  
+    collection(db,"questions"),  
+    where("category","==",selectedCategoryKey),  
+    where("mode","==","reading")  
+   );  
+   const snapshot = await getDocs(qRef);  
+   snapshot.forEach(docSnap => rawQuestions.push(docSnap.data()));  
+   if (rawQuestions.length > 0) {
+    localStorage.setItem(cacheKey, JSON.stringify(rawQuestions));
+   }
+  } else {
+   const localData = localStorage.getItem(cacheKey);
+   if (localData) rawQuestions = JSON.parse(localData);
+  }
+  
+  if (!rawQuestions.length) {  
+   screenContent.innerHTML = `  
+    <div class="quiz-container-box">  
+     <div class="quiz-header-title"><i class="fa-solid fa-book-open" style="color:#079669"></i> READING BOOK</div>  
+     <div class="quiz-sub-title">${selectedCategoryTitle}</div>  
+     <p style="font-size:13px;color:#dc3545;text-align:center;padding:25px 0;font-weight:700;">यस विषयमा हाल Reading Book का प्रश्नहरू उपलब्ध छैनन्।</p>  
+     <button class="close-btn" onclick="closeQuizScreen()">बन्द गर्नुहोस्</button>  
+    </div>`;  
+   return;  
+  }  
   
   processQuestionsIntoSets(rawQuestions);  
   const buttons = availableSets.map(name =>  
@@ -711,7 +761,7 @@ window.openReadingBookSets = async function() {
    </div>`;  
  } catch(error) {  
   console.error("Error loading reading sets:",error);  
-  screenContent.innerHTML = '<div class="quiz-container-box loading-text" style="color:#dc3545">सेटहरू लोड गर्न सकिएन। Firebase जडान जाँच गर्नुहोस्।</div>';  
+  screenContent.innerHTML = '<div class="quiz-container-box loading-text" style="color:#dc3545">सेटहरू लोड गर्न सकिएन।</div>';  
  }  
 };  
   
@@ -796,14 +846,12 @@ window.loadQuizQuestion = function() {
  const q = activeQuestions[currentQuestionIndex];  
  const letters = ["A","B","C","D"];  
  let foundCorrect = false;  
- let correctText = "";  
   
  const optionsHtml = (Array.isArray(q.options)?q.options:[]).map((opt,index) => {  
   const info = getOptionInfo(opt);  
   const isCorrect = info.isCorrect && !foundCorrect;  
   if (isCorrect) {  
    foundCorrect = true;  
-   correctText = info.text;  
   }  
   return `<div class="mcq-option" data-correct="${isCorrect}" onclick="handleOptionClick(this,${isCorrect})">  
    <div class="option-badge">${letters[index%4]}</div>  
@@ -915,16 +963,25 @@ window.handlePopupOk = function() {
  currentQuestionIndex = 0;  
  pendingNextAction = () => window.loadQuizQuestion();  
    
- const adPlaceholder = document.getElementById("adPlaceholderText");  
- const skipBtn = document.getElementById("skipAdBtn");  
- adPlaceholder.textContent = "विज्ञापन लोड हुँदैछ...";  
- skipBtn.style.display = "none";  
- fullScreenAd.style.display = "flex";  
-   
- setTimeout(() => {  
-  adPlaceholder.textContent = "विज्ञापन क्षेत्र";  
-  skipBtn.style.display = "block";  
- }, 1200);  
+ if (navigator.onLine) {
+  const adPlaceholder = document.getElementById("adPlaceholderText");  
+  const skipBtn = document.getElementById("skipAdBtn");  
+  adPlaceholder.textContent = "विज्ञापन लोड हुँदैछ...";  
+  skipBtn.style.display = "none";  
+  fullScreenAd.style.display = "flex";  
+    
+  setTimeout(() => {  
+   adPlaceholder.textContent = "विज्ञापन क्षेत्र";  
+   skipBtn.style.display = "block";  
+  }, 1200);  
+ } else {
+  // अफलाइन मोडमा विज्ञापन नदेखाई सिधै अर्को प्रश्नमा जाने
+  if (pendingNextAction) {
+   const action = pendingNextAction;
+   pendingNextAction = null;
+   action();
+  }
+ }
 };  
   
 window.addEventListener("click",event => {  
