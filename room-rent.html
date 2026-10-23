@@ -5,38 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>कोठा भाडा (Room Rent)</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#f97316">
+    <meta name="theme-color" content="#ffffff">
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; }
         :root {
             --primary-gradient: linear-gradient(135deg, #f97316 0%, #c2410c 100%);
-            --bg-color: #0b0f19;
-            --text-main: #ffffff;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #111827;
+            --text-sub: #6b7280;
             --main-theme-color: #e11d48;
         }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Mukta', 'Roboto', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
-            margin: 0; padding: 0 0 30px 0;
+            margin: 0; padding: 0 0 100px 0;
             overflow-x: hidden;
         }
         header {
             background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             color: white; text-align: center;
             padding: 25px 20px; 
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 4px solid #f97316;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
-        header h1 { margin: 0; font-size: 24px; font-weight: 800; color: #f97316; }
-        header p { margin: 6px 0 0 0; font-size: 13px; opacity: 0.8; }
+        header h1 { margin: 0; font-size: 24px; font-weight: 800; color: #ffffff; }
+        header p { margin: 6px 0 0 0; font-size: 13px; color: #cbd5e1; font-weight: 500; }
 
-        .container { width: 100%; max-width: 800px; margin: 20px auto; padding: 0 15px; }
+        .container { width: 100%; max-width: 800px; margin: 0 auto; padding: 0; }
 
         .search-filter-container {
             display: flex;
             flex-direction: column;
             gap: 12px;
-            margin-bottom: 20px;
+            margin: 15px 0 20px 0;
+            padding: 0 15px;
         }
         
         .search-box-wrapper {
@@ -46,12 +51,13 @@
         .search-input {
             width: 100%;
             padding: 12px 18px 12px 45px;
-            background: #1e293b;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
             border-radius: 30px;
-            color: #ffffff;
+            color: #111827;
             font-size: 15px;
             outline: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
             transition: border-color 0.3s ease;
         }
         .search-input:focus {
@@ -76,9 +82,9 @@
         .filter-tabs::-webkit-scrollbar { display: none; }
 
         .filter-btn {
-            background: #1e293b;
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: #ffffff;
+            color: #475569;
+            border: 1px solid #cbd5e1;
             padding: 8px 16px;
             border-radius: 30px;
             font-size: 13px;
@@ -89,42 +95,44 @@
         }
         .filter-btn:hover {
             border-color: #f97316;
+            color: #f97316;
         }
         .filter-btn.active {
             background: var(--primary-gradient);
+            color: #ffffff;
             border-color: transparent;
-            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.4);
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
         }
 
         .content-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-        @media(min-width: 600px) {
-            .content-grid { grid-template-columns: repeat(2, 1fr); }
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
         }
 
+        /* कार्ड - वारपार (Full Width) */
         .content-card {
-            background: #1e293b;
-            border-radius: 14px;
+            background: var(--card-bg);
+            border-radius: 0;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            border-top: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
             cursor: pointer;
-            transition: transform 0.3s ease, border-color 0.3s ease;
+            transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
         }
         .content-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(249, 115, 22, 0.5);
+            border-color: #3b82f6;
         }
 
+        /* थम्बनेल - full width वारपार */
         .thumbnail-box {
             width: 100%;
             aspect-ratio: 16 / 9;
-            background-color: #0f172a;
+            background-color: #e2e8f0;
             position: relative;
             overflow: hidden;
             display: flex;
@@ -135,31 +143,19 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: block;
         }
-        
-        .icon-overlay {
-            position: absolute;
-            width: 45px; height: 45px;
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ffffff;
-            font-size: 18px;
-        }
-        .image-overlay { color: #38bdf8; }
 
         .card-info {
-            padding: 15px;
+            padding: 16px 18px 18px 18px;
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
         .card-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: #ffffff;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-main);
             margin: 0;
             line-height: 1.4;
         }
@@ -170,176 +166,209 @@
             font-size: 12px;
         }
         .card-date {
-            color: #38bdf8;
-            font-weight: 600;
-        }
-        .card-views {
-            color: #cbd5e1;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .read-more-btn {
-            background: var(--primary-gradient);
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
+            color: #0284c7;
+            font-weight: 700;
         }
 
+        .read-more-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: var(--primary-gradient);
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 10px;
+            margin-top: 4px;
+            transition: transform 0.2s;
+            align-self: flex-start;
+            box-shadow: 0 4px 10px rgba(249, 115, 22, 0.25);
+            border: none;
+            cursor: pointer;
+        }
+        .read-more-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Full Screen Reading View */
         #fullScreenModal {
             display: none;
             position: fixed;
             z-index: 9999;
             left: 0; top: 0;
             width: 100vw; height: 100vh;
-            background-color: #f8fafc;
+            background-color: #ffffff;
             overflow-y: auto;
-            padding: 20px 15px;
+            padding: 0;
             box-sizing: border-box;
         }
         .modal-inner {
             width: 100%;
-            max-width: 900px;
+            max-width: 800px;
             margin: 0 auto;
+            background: #ffffff;
+            padding: 0;
             display: flex;
             flex-direction: column;
-            gap: 16px;
-            padding-bottom: 40px;
+            min-height: 100%;
+        }
+
+        .modal-padded-content {
+            padding: 15px 18px 0 18px;
         }
 
         .modal-header-title {
-            font-size: 26px;
-            font-weight: 900;
-            color: var(--main-theme-color);
+            font-size: 22px;
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 12px;
             line-height: 1.4;
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 12px;
         }
 
         .modal-meta-info {
             display: flex;
-            justify-content: space-between;
+            gap: 15px;
             align-items: center;
-            font-size: 15px;
-            font-weight: 700;
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 12px;
+            font-weight: 600;
         }
         .modal-date {
-            color: #0369a1;
+            color: #0284c7;
         }
-        .modal-views {
-            color: #475569;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
+
+        /* Modal Image - १००% कुनादेखि कुनासम्म वारपार */
         .modal-image-container {
-            width: 100%;
-            max-height: 60vh;
-            border-radius: 14px;
+            width: 100vw;
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
+            margin-top: 10px;
+            margin-bottom: 18px;
             overflow: hidden;
-            background: #e2e8f0;
-            border: 2px solid #cbd5e1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: #f1f5f9;
         }
         .modal-image-container img {
             width: 100%;
             height: auto;
-            max-height: 60vh;
-            object-fit: contain;
             display: block;
         }
 
-        .modal-description {
-            font-size: 20px; 
-            color: #1e293b; 
-            line-height: 1.9;
-            font-weight: 700; 
-            background: #ffffff; 
-            padding: 24px; 
-            border-radius: 14px;
-            border: 1px solid #cbd5e1; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
-            word-wrap: break-word;
-            text-align: justify; 
+        .modal-description-box {
+            background: #ffffff;
+            padding: 0;
+            margin-bottom: 18px;
         }
 
-        .banner-ad-container {
+        .modal-description {
+            font-size: 18px;
+            color: #1f2937;
+            line-height: 1.75;
+            font-weight: 600; 
+            text-align: left;
+            white-space: pre-line;
+            word-break: normal;
+            overflow-wrap: break-word;
+        }
+
+        /* Top Banner Ad Box (320x50) - पारदर्शी */
+        .modal-ad-box-top {
             width: 100%;
-            background: #ffffff;
-            border: 2px dashed #94a3b8;
-            border-radius: 12px;
-            padding: 15px;
-            text-align: center;
-            min-height: 90px;
+            max-width: 320px;
+            min-height: 50px;
+            margin: 12px auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #64748b;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
-            margin: 15px 0;
+            overflow: hidden;
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
         }
 
         .social-follow-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            padding: 14px 18px;
-            background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
             border-radius: 14px;
-            border: 2px solid #fdba74;
-            box-shadow: 0 6px 18px rgba(249, 115, 22, 0.12);
-            margin-top: 10px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
         }
         .follow-text {
-            font-size: 16px;
-            font-weight: 800;
-            color: #c2410c;
+            font-size: 15px;
+            font-weight: 700;
+            color: #d97706;
         }
         .social-icons-group {
             display: flex;
             gap: 12px;
         }
         .social-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 45px;
-            height: 45px;
+            width: 40px; height: 40px;
             border-radius: 50%;
-            color: white;
-            font-size: 20px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 17px;
             text-decoration: none;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.12);
             transition: transform 0.2s;
         }
-        .social-btn:hover { transform: scale(1.1); }
+        .social-btn:hover { transform: scale(1.08); }
         .whatsapp-bg { background-color: #25d366; }
         .phone-bg { background-color: #0284c7; }
 
         .close-modal-btn {
-            background: linear-gradient(135deg, #e11d48, #be123c);
-            color: white;
+            background: #0f172a;
+            color: #ffffff;
             border: none;
-            padding: 16px 20px;
-            border-radius: 14px;
-            font-size: 18px;
-            font-weight: 800;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
             cursor: pointer;
             width: 100%;
-            box-shadow: 0 6px 20px rgba(225, 29, 72, 0.3);
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
             margin-top: 10px;
+            margin-bottom: 40px;
+            transition: background 0.2s;
         }
+        .close-modal-btn:hover {
+            background: #1e293b;
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: #ffffff;
+            backdrop-filter: blur(12px);
+            display: flex; justify-content: space-around; align-items: center; 
+            padding: 8px 0;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.08);
+            border-top: 1px solid #e2e8f0;
+            z-index: 900;
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-decoration: none; color: #64748b; font-size: 12px; font-weight: 700;
+            padding: 6px 12px; gap: 3px; cursor: pointer;
+            flex: 1;
+            transition: color 0.2s;
+        }
+        .nav-item i { font-size: 18px; }
+        .nav-item.active { color: #2563eb; }
+        .nav-item:hover { color: #2563eb; }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google AdMob Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3940256099942544" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -352,7 +381,7 @@
         <div class="search-filter-container">
             <div class="search-box-wrapper">
                 <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                <input type="text" id="searchInput" class="search-input" placeholder="Search District (जिल्ला खोज्नुहोस्)..." onkeyup="filterBySearch()">
+                <input type="text" id="searchInput" class="search-input" placeholder="जिल्ला अनुसार खोज्नुहोस् (Search District)..." onkeyup="filterBySearch()">
             </div>
             
             <div class="filter-tabs">
@@ -369,15 +398,36 @@
         </div>
 
         <div id="contentGrid" class="content-grid">
-            <div style="text-align: center; color: #94a3b8; grid-column: span 2; padding: 40px; font-weight: bold;">डाटा लोड हुँदैछ...</div>
+            <div style="text-align: center; color: var(--text-sub); padding: 40px; font-weight: bold;">डाटा लोड हुँदैछ...</div>
         </div>
     </div>
 
+    <!-- Full Screen Reading View -->
     <div id="fullScreenModal">
         <div class="modal-inner">
             <div id="modalContentArea"></div>
             <div id="modalBottomArea"></div>
         </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+        </a>
+        <a href="vacancy.html" class="nav-item">
+            <i class="fa-solid fa-file-lines"></i>
+            <span>Vacancy</span>
+        </a>
+        <a href="news.html" class="nav-item">
+            <i class="fa-solid fa-bell"></i>
+            <span>News</span>
+        </a>
+        <a href="more.html" class="nav-item active">
+            <i class="fa-solid fa-bars"></i>
+            <span>More</span>
+        </a>
     </div>
 
     <script type="module">
@@ -409,6 +459,30 @@
         let currentCategory = 'all';
         let unsubscribe = null;
 
+        // Top Banner Ad (320x50) Load Function
+        window.loadTopBannerAd = function(containerId) {
+            if (!navigator.onLine) return;
+            const container = document.getElementById(containerId);
+            if (!container || container.dataset.adLoaded === "true") return;
+            container.dataset.adLoaded = "true";
+
+            const adElement = document.createElement("ins");
+            adElement.className = "adsbygoogle";
+            adElement.style.display = "inline-block";
+            adElement.style.width = "320px";
+            adElement.style.height = "50px";
+            adElement.setAttribute("data-ad-client", "ca-pub-3940256099942544");
+            adElement.setAttribute("data-ad-slot", "9214589741");
+
+            container.appendChild(adElement);
+
+            try {
+                (window.adsbygoogle = window.adsbygoogle || []).push({});
+            } catch(e) {
+                console.error("AdMob load error:", e);
+            }
+        };
+
         function loadRoomRentData() {
             const grid = document.getElementById('contentGrid');
             
@@ -417,7 +491,6 @@
             }
 
             try {
-                // 'room_rent' लाई 'roomrent' मा बदलियो
                 unsubscribe = onSnapshot(collection(db, "roomrent"), (querySnapshot) => {
                     currentItems = [];
                     querySnapshot.forEach((docSnap) => {
@@ -427,7 +500,7 @@
                     renderGrid(currentItems);
                 }, (error) => {
                     console.error("Firebase error: ", error);
-                    grid.innerHTML = `<p style="text-align:center; grid-column: 1/-1; color:#ef4444; padding:30px;">डाटा लोड गर्न सकिएन। इन्टरनेट जडान चेक गर्नुहोस्।</p>`;
+                    grid.innerHTML = `<p style="text-align:center; color:#dc2626; padding:30px; font-weight:bold;">डाटा लोड गर्न सकिएन। इन्टरनेट जडान चेक गर्नुहोस्।</p>`;
                 });
             } catch (err) {
                 console.error("Error setting up snapshot: ", err);
@@ -470,30 +543,28 @@
             let html = '';
 
             if (itemsToDisplay.length === 0) {
-                grid.innerHTML = `<p style="text-align:center; grid-column: 1/-1; color:#94a3b8; padding:30px;">कुनै पनि विवरण फेला परेन। (No results found)</p>`;
+                grid.innerHTML = `<p style="text-align:center; color:var(--text-sub); padding:30px; font-weight:bold;">कुनै पनि विवरण फेला परेन। (No results found)</p>`;
                 return;
             }
 
             itemsToDisplay.forEach((item) => {
                 let originalIndex = currentItems.findIndex(i => i.id === item.id);
                 let displayImg = item.imageUrl || 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800';
-                let viewCount = item.viewCount || 0;
 
                 html += `
                     <div class="content-card" onclick="openDetail(${originalIndex})">
                         <div class="thumbnail-box">
                             <img src="${displayImg}" alt="Thumbnail" loading="lazy">
-                            <div class="icon-overlay image-overlay"><i class="fa-solid fa-image"></i></div>
                         </div>
                         <div class="card-info">
-                            <h3 class="card-title">${item.title}</h3>
                             <div class="card-meta-row">
                                 <span class="card-date"><i class="fa-regular fa-calendar"></i> ${item.date || 'हालैको'}</span>
-                                <span class="card-views"><i class="fa-solid fa-eye"></i> ${viewCount} पटक हेरिएको</span>
                             </div>
-                            <div style="display: flex; justify-content: flex-end;">
-                                <button class="read-more-btn">पुरा हेर्नुहोस्</button>
-                            </div>
+                            <h3 class="card-title">${item.title}</h3>
+                            <button class="read-more-btn">
+                                <span>पुरा हेर्नुहोस्</span>
+                                <i class="fa-solid fa-arrow-right-long"></i>
+                            </button>
                         </div>
                     </div>
                 `;
@@ -505,10 +576,9 @@
             let item = currentItems[index];
             if (!item) return;
 
-            // View Count बढाउने कोड (Firebase Firestore Increment)
+            // Views बाहिर नदेखिए पनि Firestore मा सेभ भइरहन्छ (Admin Panel को लागि)
             if (item.id) {
                 try {
-                    // यहाँ पनि 'room_rent' लाई 'roomrent' मा बदलियो
                     const docRef = doc(db, "roomrent", item.id);
                     await updateDoc(docRef, {
                         viewCount: increment(1)
@@ -518,66 +588,54 @@
                 }
             }
 
-            let descriptionText = item.description || '';
-            let words = descriptionText.split(/\s+/);
-            let descriptionHTML = '';
-            
-            if (words.length > 50) {
-                let firstPart = words.slice(0, 50).join(' ');
-                let secondPart = words.slice(50).join(' ');
-                
-                descriptionHTML = `
-                    <div class="modal-description">
-                        ${firstPart} ...
-                        <div class="banner-ad-container">
-                            <span>[ ब्यानर एड (Banner Ad) ५० शब्द पछि ]</span>
-                        </div>
-                        ${secondPart}
-                    </div>
-                `;
-            } else {
-                descriptionHTML = `
-                    <div class="modal-description">${descriptionText}</div>
-                    <div class="banner-ad-container">
-                        <span>[ ब्यानर एड (Banner Ad) यहाँ देखिनेछ ]</span>
-                    </div>
-                `;
-            }
-
+            let descriptionText = item.description || 'विस्तृत विवरण उपलब्ध छैन।';
             let detailImg = item.imageUrl || 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800';
-            let mediaBlock = `
-                <div class="modal-image-container">
-                    <img src="${detailImg}" alt="Image">
-                </div>
-            `;
-
-            let updatedViews = (item.viewCount || 0) + 1;
 
             let contentHTML = `
-                <div class="modal-meta-info">
-                    <span class="modal-date"><i class="fa-regular fa-calendar"></i> ${item.date || ''} | जिल्ला: <b>${item.district || 'विवरण छैन'}</b></span>
-                    <span class="modal-views"><i class="fa-solid fa-eye"></i> ${updatedViews} पटक हेरिएको</span>
+                <div class="modal-padded-content">
+                    <div class="modal-header-title">${item.title}</div>
+                    
+                    <div class="modal-meta-info">
+                        <span class="modal-date"><i class="fa-regular fa-calendar"></i> ${item.date || ''} | जिल्ला: <b>${item.district || 'विवरण छैन'}</b></span>
+                    </div>
+
+                    <!-- 320x50 Top Banner Ad -->
+                    <div class="modal-ad-box-top" id="topRoomRentAd"></div>
                 </div>
-                <div class="modal-header-title">${item.title}</div>
-                ${mediaBlock}
-                ${descriptionHTML}
+
+                <div class="modal-image-container">
+                    <img src="${detailImg}" alt="Room Image">
+                </div>
+
+                <div class="modal-padded-content">
+                    <div class="modal-description-box">
+                        <div class="modal-description">${descriptionText}</div>
+                    </div>
+                </div>
             `;
 
             let bottomHTML = `
-                <div class="social-follow-container">
-                    <span class="follow-text">सम्पर्क गर्नुहोस्:</span>
-                    <div class="social-icons-group">
-                        <a href="https://wa.me/${siteConfig.whatsappNumber}" target="_blank" class="social-btn whatsapp-bg" title="WhatsApp मा कुरा गर्नुहोस्"><i class="fa-brands fa-whatsapp"></i></a>
-                        <a href="tel:${siteConfig.phoneNumber}" class="social-btn phone-bg" title="फोन गर्नुहोस्"><i class="fa-solid fa-phone"></i></a>
+                <div class="modal-padded-content">
+                    <div class="social-follow-container">
+                        <span class="follow-text">सम्पर्क गर्नुहोस्:</span>
+                        <div class="social-icons-group">
+                            <a href="https://wa.me/${siteConfig.whatsappNumber}" target="_blank" class="social-btn whatsapp-bg" title="WhatsApp मा कुरा गर्नुहोस्"><i class="fa-brands fa-whatsapp"></i></a>
+                            <a href="tel:${siteConfig.phoneNumber}" class="social-btn phone-bg" title="फोन गर्नुहोस्"><i class="fa-solid fa-phone"></i></a>
+                        </div>
                     </div>
+                    <button class="close-modal-btn" onclick="closeFullModal()">बन्द गर्नुहोस् (Close)</button>
                 </div>
-                <button class="close-modal-btn" onclick="closeFullModal()">बन्द गर्नुहोस् (Close)</button>
             `;
 
             document.getElementById('modalContentArea').innerHTML = contentHTML;
             document.getElementById('modalBottomArea').innerHTML = bottomHTML;
             document.getElementById('fullScreenModal').style.display = 'block';
             document.body.style.overflow = 'hidden';
+            document.getElementById('fullScreenModal').scrollTop = 0;
+
+            setTimeout(() => {
+                window.loadTopBannerAd("topRoomRentAd");
+            }, 100);
         }
 
         window.closeFullModal = function() {
@@ -585,6 +643,7 @@
             document.getElementById('modalBottomArea').innerHTML = '';
             document.getElementById('fullScreenModal').style.display = 'none';
             document.body.style.overflow = 'auto';
+            renderGrid(currentItems);
         }
 
         window.addEventListener('DOMContentLoaded', () => {
