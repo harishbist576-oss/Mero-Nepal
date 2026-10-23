@@ -12,8 +12,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Roboto:wght@400;500;600;700;800&display=swap" rel="stylesheet">  
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">  
 
-<!-- Google AdMob / AdSense Script -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3940256099942544" crossorigin="anonymous"></script>
+<!-- Google AdMob / AdSense Script (डाइनामिक लोड हुने भएकोले यहाँबाट हार्डकोडेड आईडी हटाइएको छ) -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" crossorigin="anonymous"></script>
 
 <style>  
 :root{  
@@ -478,7 +478,7 @@ footer{padding:18px 10px;text-align:center;color:#8995a8;font-size:11px}
 <script type="module">  
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";  
 import {  
- getFirestore, collection, getDocs, query, where,  
+ getFirestore, collection, getDocs, doc, getDoc, query, where,  
  enableIndexedDbPersistence  
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";  
   
@@ -497,6 +497,28 @@ const db = getFirestore(app);
 try {  
  enableIndexedDbPersistence(db).catch(() => {});  
 } catch(e) {}  
+
+// डाइनामिक एड्सको लागि ग्लोबल भेरिएबल (यदि फायरबेसबाट फेच भएन भने यी टेस्ट आईडी प्रयोग हुनेछन्)
+let dynamicAdClient = "ca-pub-3940256099942544";  
+let dynamicAdSlot = "9214589741";
+
+// फायरबेसबाट एड्मिनले राखेको विज्ञापनको सेटिङ्स तान्ने फंक्सन
+async function fetchAdSettings() {
+ try {
+  const docRef = doc(db, "settings", "ads");
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+   const data = docSnap.data();
+   if (data.adClient) dynamicAdClient = data.adClient;
+   if (data.adSlot) dynamicAdSlot = data.adSlot;
+  }
+ } catch(e) {
+  console.error("Ad settings fetch error:", e);
+ }
+}
+
+// एप खुल्नेबित्तिकै एड्स सेटिङ्स लोड गर्ने
+fetchAdSettings();
   
 const modal = document.getElementById("quizModal");  
 const modalTitle = document.getElementById("modalTitle");  
@@ -597,19 +619,21 @@ function loadBannerAds() {
  }
 }  
   
-// AdMob / AdSense Dynamic Banner Loader (इन्टरनेट हुँदा मात्र चल्ने)
+// एड्मिन प्यानलबाट फेच भएको नयाँ एड्स आईडी प्रयोग गरेर विज्ञापन लोड गर्ने फंक्सन
 window.loadDynamicBannerAd = function(containerId) {  
  const container = document.getElementById(containerId);  
- if (!container || container.dataset.adLoaded === "true") return;  
- container.dataset.adLoaded = "true";  
+ if (!container) return;  
+ container.innerHTML = ""; // पुरानो विज्ञापन खाली गर्ने  
   
  const adElement = document.createElement("ins");  
  adElement.className = "adsbygoogle";  
  adElement.style.display = "inline-block";  
  adElement.style.width = "320px";  
  adElement.style.height = "50px";  
- adElement.setAttribute("data-ad-client", "ca-pub-3940256099942544");
- adElement.setAttribute("data-ad-slot", "9214589741");
+ 
+ // यहाँ फायरबेसबाट अपडेट भएर आएको नयाँ आईडी सेट हुन्छ
+ adElement.setAttribute("data-ad-client", dynamicAdClient);
+ adElement.setAttribute("data-ad-slot", dynamicAdSlot);
   
  container.appendChild(adElement);  
   
@@ -638,7 +662,6 @@ function getOptionInfo(opt) {
 window.startQuiz = async function(mode) {  
  window.closeModal();  
 
- // Live Quiz को लागि इन्टरनेट अनिवार्य हुनुपर्छ
  if (mode === "live" && !navigator.onLine) {  
   window.showAlert("Live Quiz खेल्नका लागि अनिवार्य इन्टरनेट जडान हुनुपर्छ। कृपया इन्टरनेट अन गर्नुहोस्।");  
   return;  
@@ -657,7 +680,6 @@ window.startQuiz = async function(mode) {
  try {  
   let rawQuestions = [];
 
-  // अनलाइन हुँदा Firebase बाट नयाँ डाटा तान्ने र लोकल स्टोरेजमा सेभ गर्ने
   if (navigator.onLine) {
    const qRef = query(  
     collection(db,"questions"),  
@@ -670,7 +692,6 @@ window.startQuiz = async function(mode) {
     localStorage.setItem(cacheKey, JSON.stringify(rawQuestions));
    }
   } else {
-   // अफलाइन हुँदा अघि सेभ भएको डाटा लोकल स्टोरेजबाट तान्ने (Test Quiz को लागि)
    const localData = localStorage.getItem(cacheKey);
    if (localData) {
     rawQuestions = JSON.parse(localData);
@@ -692,7 +713,6 @@ window.startQuiz = async function(mode) {
   window.loadQuizQuestion();  
  } catch(error) {  
   console.error("Error fetching questions:",error);  
-  // यदि नेटवर्क इरर आयो तर लोकल स्टोरेजमा छ भने अफलाइन चलाउने
   const localData = localStorage.getItem(cacheKey);
   if (mode === "test" && localData) {
    let rawQuestions = JSON.parse(localData);
@@ -975,7 +995,6 @@ window.handlePopupOk = function() {
    skipBtn.style.display = "block";  
   }, 1200);  
  } else {
-  // अफलाइन मोडमा विज्ञापन नदेखाई सिधै अर्को प्रश्नमा जाने
   if (pendingNextAction) {
    const action = pendingNextAction;
    pendingNextAction = null;
