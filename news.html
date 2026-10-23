@@ -5,79 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ताजा समाचार तथा सूचना (News)</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#000000">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#ffffff">
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; }
         :root {
-            --bg-color: #121212; /* कालो ब्याकग्राउन्ड */
-            --card-bg: #1e1e1e; /* कार्डको लागि गाढा रङ */
-            --text-main: #f8fafc; /* मुख्य सेतो अक्षर */
-            --text-sub: #94a3b8; /* हल्का खरानी अक्षर */
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #111827;
+            --text-sub: #6b7280;
         }
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Mukta', 'Roboto', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0; padding: 0 0 100px 0;
             overflow-x: hidden;
         }
         header {
-            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             color: #ffffff; 
             text-align: center;
-            padding: 30px 20px; 
+            padding: 25px 20px; 
             border-bottom: 4px solid #f59e0b;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
         header h1 { 
             margin: 0; 
-            font-size: 26px; 
-            font-weight: 700; 
+            font-size: 24px; 
+            font-weight: 800; 
             letter-spacing: 0.5px; 
             color: #ffffff; 
-            font-family: "Kalimati", "Mukta", sans-serif;
         }
         header p { 
-            margin: 8px 0 0 0; 
-            font-size: 14px; 
+            margin: 6px 0 0 0; 
+            font-size: 13px; 
             color: #cbd5e1; 
-            font-weight: 400; 
-            font-family: "Kalimati", "Mukta", sans-serif;
+            font-weight: 500; 
         }
 
-        .container { width: 100%; max-width: 800px; margin: 20px auto; padding: 0 15px; }
+        .container { width: 100%; max-width: 800px; margin: 0 auto; padding: 0; }
 
         .news-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        @media(min-width: 600px) {
-            .news-grid { grid-template-columns: repeat(2, 1fr); gap: 18px; }
-        }
-
-        .news-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            overflow: hidden;
-            border: 2px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
             display: flex;
             flex-direction: column;
-            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        /* समाचार कार्ड - स्क्रिनको वारपार (Full Width) */
+        .news-card {
+            background: var(--card-bg);
+            border-radius: 0;
+            overflow: hidden;
+            border-top: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
         }
         .news-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(59, 130, 246, 0.2);
             border-color: #3b82f6;
         }
 
+        /* थम्बनेल - full width वारपार */
         .thumbnail-box {
             width: 100%;
             aspect-ratio: 16 / 9;
-            background-color: #2a2a2a;
+            background-color: #e2e8f0;
             position: relative;
             overflow: hidden;
             display: flex;
@@ -89,6 +85,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: block;
         }
         .thumbnail-placeholder {
             font-size: 13px;
@@ -99,19 +96,18 @@
         }
 
         .news-info {
-            padding: 18px 20px 20px 20px;
+            padding: 16px 18px 18px 18px;
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
         .news-title {
-            font-size: 17px;
-            font-weight: 700;
+            font-size: 18px;
+            font-weight: 800;
             color: var(--text-main);
             margin: 0;
             line-height: 1.4;
             cursor: pointer;
-            font-family: "Kalimati", "Mukta", sans-serif;
         }
 
         .news-footer-row {
@@ -130,7 +126,7 @@
             font-weight: 600;
         }
         .news-date {
-            color: #38bdf8;
+            color: #0284c7;
         }
 
         .read-more-btn {
@@ -142,60 +138,68 @@
             border-radius: 10px;
             cursor: pointer;
             border: none;
-            box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+            box-shadow: 0 4px 10px rgba(245, 158, 11, 0.25);
             transition: transform 0.2s;
             text-align: center;
             text-decoration: none;
-            font-family: "Kalimati", "Mukta", sans-serif;
         }
         .read-more-btn:hover {
             transform: scale(1.05);
         }
 
-        /* Full Screen Reading View */
+        /* Full Screen Reading Modal */
         #fullScreenModal {
             display: none;
             position: fixed;
             z-index: 9999;
             left: 0; top: 0;
             width: 100vw; height: 100vh;
-            background-color: #000000; /* मोडलको ब्याकग्राउन्ड पूर्ण कालो */
+            background-color: #ffffff;
             overflow-y: auto;
-            padding: 20px;
+            padding: 0;
             box-sizing: border-box;
         }
         .modal-inner {
             width: 100%;
-            max-width: 700px;
+            max-width: 800px;
             margin: 0 auto;
-            background: transparent;
-            padding: 10px 0;
+            background: #ffffff;
+            padding: 0;
         }
         
+        .modal-padded-content {
+            padding: 15px 18px 0 18px;
+        }
+
         .modal-header-title {
             font-size: 22px;
-            font-weight: 700;
-            color: #f87171;
+            font-weight: 800;
+            color: #111827;
             margin-bottom: 12px;
-            line-height: 1.45;
-            font-family: "Kalimati", "Mukta", sans-serif;
+            line-height: 1.4;
         }
         .modal-meta {
             display: flex;
-            justify-content: space-between;
+            gap: 15px;
             align-items: center;
             font-size: 13px;
-            color: #38bdf8;
-            margin-bottom: 15px;
-            font-weight: 700;
+            color: #6b7280;
+            margin-bottom: 12px;
+            font-weight: 600;
         }
+        
+        /* Modal Image - १००% कुनादेखि कुनासम्म वारपार */
         .modal-image-container {
-            width: 100%;
-            margin-bottom: 20px;
-            border-radius: 16px;
+            width: 100vw;
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
+            margin-top: 10px;
+            margin-bottom: 18px;
             overflow: hidden;
-            background: #1e1e1e;
-            border: 1px solid rgba(255,255,255,0.1);
+            background: #f1f5f9;
         }
         .modal-image-container img {
             width: 100%;
@@ -204,123 +208,117 @@
         }
 
         .modal-description-box {
-            background: #111111;
-            border: 1px solid #333333;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            background: #ffffff;
+            padding: 0;
+            margin-bottom: 18px;
         }
 
         .modal-description {
-            font-size: 17px;
-            color: #ffffff;
-            line-height: 1.8;
-            font-weight: 700; 
-            text-align: justify;
+            font-size: 18px;
+            color: #1f2937;
+            line-height: 1.75;
+            font-weight: 600; 
+            text-align: left;
             white-space: pre-line;
             word-break: normal;
             overflow-wrap: break-word;
-            font-family: "Kalimati", "Mukta", sans-serif;
         }
 
+        /* Ads बक्स पारदर्शी */
         .modal-ad-box {
             width: 100%;
-            background: #1a1a1a;
-            border: 2px dashed #444444;
-            border-radius: 16px;
-            padding: 18px;
-            text-align: center;
-            margin-bottom: 20px;
-            min-height: 80px;
+            max-width: 320px;
+            min-height: 50px;
+            margin: 12px auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #94a3b8;
-            font-size: 13px;
-            font-weight: 600;
+            overflow: hidden;
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
         }
 
         .social-follow-box {
-            background: linear-gradient(135deg, #1f2937 100%, #111827 100%);
-            border: 1px solid #374151;
-            border-radius: 16px;
-            padding: 15px 20px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 14px 18px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
             flex-wrap: wrap;
             gap: 12px;
         }
         .social-title {
             font-size: 15px;
             font-weight: 700;
-            color: #fbbf24;
-            font-family: "Kalimati", "Mukta", sans-serif;
+            color: #d97706;
         }
         .social-icons {
             display: flex;
             gap: 12px;
         }
         .social-icon-btn {
-            width: 42px; height: 42px;
+            width: 40px; height: 40px;
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            color: white; font-size: 18px;
+            color: white; font-size: 17px;
             text-decoration: none;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.12);
             transition: transform 0.2s;
         }
         .social-icon-btn:hover { transform: scale(1.08); }
         .btn-fb { background-color: #1877f2; }
         .btn-wa { background-color: #25d366; }
-        .btn-tk { background-color: #000000; border: 1px solid #444; }
+        .btn-tk { background-color: #000000; }
 
-        /* बन्द गर्नुहोस् (Close) बटन - सेतो ब्याकग्राउन्ड र कालो अक्षर */
+        /* बन्द गर्नुहोस् (Close) बटन */
         .close-modal-btn {
-            background: #ffffff;
-            color: #000000;
+            background: #0f172a;
+            color: #ffffff;
             border: none;
             padding: 14px 20px;
             border-radius: 12px;
             font-size: 15px;
-            font-weight: bold;
+            font-weight: 700;
             cursor: pointer;
             width: 100%;
-            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+            margin-top: 10px;
             margin-bottom: 40px;
             transition: background 0.2s;
-            font-family: "Kalimati", "Mukta", sans-serif;
         }
         .close-modal-btn:hover {
-            background: #e2e8f0;
+            background: #1e293b;
         }
 
-        /* Bottom Navigation Bar Styles - सेतो ब्याकग्राउन्ड */
+        /* Bottom Navigation Bar Styles */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%;
-            background: #ffffff; /* पूर्ण सेतो ब्याकग्राउन्ड */
+            background: #ffffff;
             backdrop-filter: blur(12px);
             display: flex; justify-content: space-around; align-items: center; 
             padding: 8px 0;
-            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.3);
-            border-top: 1px solid #cbd5e1;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.08);
+            border-top: 1px solid #e2e8f0;
             z-index: 900;
         }
         .nav-item {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-decoration: none; color: #475569; font-size: 12px; font-weight: 700;
+            text-decoration: none; color: #64748b; font-size: 12px; font-weight: 700;
             padding: 6px 12px; gap: 3px; cursor: pointer;
             flex: 1;
             transition: color 0.2s;
         }
         .nav-item i { font-size: 18px; }
-        .nav-item.active { color: #0d5c3f; }
-        .nav-item:hover { color: #0d5c3f; }
+        .nav-item.active { color: #2563eb; }
+        .nav-item:hover { color: #2563eb; }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google AdMob / AdSense Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3940256099942544" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -331,14 +329,13 @@
 
     <div class="container">
         <div id="newsContainer" class="news-grid">
-            <div style="text-align: center; color: var(--text-sub); grid-column: span 1; padding: 40px; font-weight: bold;">समाचारहरू लोड हुँदैछन्...</div>
+            <div style="text-align: center; color: var(--text-sub); padding: 40px; font-weight: bold;">समाचारहरू लोड हुँदैछन्...</div>
         </div>
     </div>
 
     <div id="fullScreenModal">
         <div class="modal-inner">
             <div id="modalContentArea"></div>
-            <button class="close-modal-btn" onclick="closeFullModal()">बन्द गर्नुहोस् (Close)</button>
         </div>
     </div>
 
@@ -387,6 +384,29 @@
 
         let newsList = [];
 
+        window.loadDynamicBannerAd = function(containerId) {
+            if (!navigator.onLine) return;
+            const container = document.getElementById(containerId);
+            if (!container || container.dataset.adLoaded === "true") return;
+            container.dataset.adLoaded = "true";
+
+            const adElement = document.createElement("ins");
+            adElement.className = "adsbygoogle";
+            adElement.style.display = "inline-block";
+            adElement.style.width = "320px";
+            adElement.style.height = "50px";
+            adElement.setAttribute("data-ad-client", "ca-pub-3940256099942544");
+            adElement.setAttribute("data-ad-slot", "9214589741");
+
+            container.appendChild(adElement);
+
+            try {
+                (window.adsbygoogle = window.adsbygoogle || []).push({});
+            } catch(e) {
+                console.error("AdMob load error:", e);
+            }
+        };
+
         async function fetchNews() {
             try {
                 const querySnapshot = await getDocs(collection(db, "news"));
@@ -396,14 +416,14 @@
                 });
 
                 if (newsList.length === 0) {
-                    newsContainer.innerHTML = `<div style="text-align: center; color: var(--text-sub); grid-column: span 1; padding: 40px; font-weight: bold;">हाल कुनै पनि समाचार उपलब्ध छैन।</div>`;
+                    newsContainer.innerHTML = `<div style="text-align: center; color: var(--text-sub); padding: 40px; font-weight: bold;">हाल कुनै पनि समाचार उपलब्ध छैन।</div>`;
                     return;
                 }
 
                 renderNews();
             } catch (error) {
                 console.error("Error fetching news: ", error);
-                newsContainer.innerHTML = `<div style="text-align: center; color: #f87171; grid-column: span 1; padding: 40px; font-weight: bold;">समाचारहरू लोड गर्न सकिएन।</div>`;
+                newsContainer.innerHTML = `<div style="text-align: center; color: #dc2626; padding: 40px; font-weight: bold;">समाचारहरू लोड गर्न सकिएन।</div>`;
             }
         }
 
@@ -425,7 +445,6 @@
             let html = '';
             newsList.forEach((item, index) => {
                 let imgTag = item.imageUrl ? `<img src="${item.imageUrl}" alt="News Banner" loading="lazy">` : `<div class="thumbnail-placeholder">समाचार ब्यानर</div>`;
-                let viewsCount = item.views || 0;
                 
                 html += `
                     <div class="news-card">
@@ -437,7 +456,6 @@
                             <div class="news-footer-row">
                                 <div class="news-meta-left">
                                     <span class="news-date"><i class="fa-regular fa-calendar"></i> ${item.date || 'हालैको'}</span>
-                                    <span><i class="fa-regular fa-eye"></i> ${viewsCount} पटक हेरिएको</span>
                                 </div>
                                 <button class="read-more-btn" onclick="openNewsDetail(${index})">
                                     पुरा पढ्नुहोस्
@@ -454,12 +472,12 @@
             let item = newsList[index];
             if (!item) return;
 
+            // भ्युज बाहिरी प्रयोगकर्तालाई नदेखाए पनि Firestore मा सेभ / अपडेट भइरहन्छ (Admin Panel को लागि)
             try {
                 const newsRef = doc(db, "news", item.id);
                 await updateDoc(newsRef, {
                     views: increment(1)
                 });
-                item.views = (item.views || 0) + 1;
             } catch (err) {
                 console.error("Error updating views: ", err);
             }
@@ -471,43 +489,52 @@
             let remainingText = getRemainingWords(fullText, 50);
 
             modalContentArea.innerHTML = `
-                <div class="modal-meta">
-                    <span><i class="fa-regular fa-calendar"></i> ${item.date || ''}</span>
-                    <span><i class="fa-regular fa-eye"></i> ${item.views || 0} पटक हेरिएको</span>
-                </div>
-                <div class="modal-header-title">${item.title}</div>
-                
-                <div class="modal-ad-box">
-                    <span>[ Top Banner Ad Here ]</span>
+                <div class="modal-padded-content">
+                    <div class="modal-header-title">${item.title}</div>
+                    
+                    <div class="modal-meta">
+                        <span><i class="fa-regular fa-user"></i> Admin News</span>
+                        <span><i class="fa-regular fa-calendar"></i> ${item.date || ''}</span>
+                    </div>
+
+                    <div class="modal-ad-box" id="topNewsAd"></div>
                 </div>
 
                 ${modalImgTag}
 
-                <div class="modal-description-box" style="margin-bottom: 15px;">
-                    <div class="modal-description">${first50Words}</div>
-                </div>
-
-                <div class="modal-ad-box">
-                    <span>[ ब्यानर एड (Banner Ad / Social Bar) यहाँ देखिनेछ ]</span>
-                </div>
-
-                <div class="social-follow-box">
-                    <div class="social-title">हामीलाई Follow गर्नुहोस्:</div>
-                    <div class="social-icons">
-                        <a href="https://www.facebook.com/gknepal400" target="_blank" class="social-icon-btn btn-fb"><i class="fa-brands fa-facebook-f"></i></a>
-                        <a href="https://whatsapp.com/channel/0029Vb8BA4U5EjxrdYNbi62M" target="_blank" class="social-icon-btn btn-wa"><i class="fa-brands fa-whatsapp"></i></a>
-                        <a href="https://tiktok.com/@gknepal40" target="_blank" class="social-icon-btn btn-tk"><i class="fa-brands fa-tiktok"></i></a>
+                <div class="modal-padded-content">
+                    <div class="modal-description-box">
+                        <div class="modal-description">${first50Words}</div>
                     </div>
-                </div>
 
-                ${remainingText ? `
-                <div class="modal-description-box">
-                    <div class="modal-description">${remainingText}</div>
-                </div>` : ''}
+                    <div class="modal-ad-box" id="middleNewsAd"></div>
+
+                    <div class="social-follow-box">
+                        <div class="social-title">हामीलाई Follow गर्नुहोस्:</div>
+                        <div class="social-icons">
+                            <a href="https://www.facebook.com/gknepal400" target="_blank" class="social-icon-btn btn-fb"><i class="fa-brands fa-facebook-f"></i></a>
+                            <a href="https://whatsapp.com/channel/0029Vb8BA4U5EjxrdYNbi62M" target="_blank" class="social-icon-btn btn-wa"><i class="fa-brands fa-whatsapp"></i></a>
+                            <a href="https://tiktok.com/@gknepal40" target="_blank" class="social-icon-btn btn-tk"><i class="fa-brands fa-tiktok"></i></a>
+                        </div>
+                    </div>
+
+                    ${remainingText ? `
+                    <div class="modal-description-box">
+                        <div class="modal-description">${remainingText}</div>
+                    </div>` : ''}
+
+                    <button class="close-modal-btn" onclick="closeFullModal()">बन्द गर्नुहोस् (Close)</button>
+                </div>
             `;
 
             fullScreenModal.style.display = 'block';
             document.body.style.overflow = 'hidden';
+            fullScreenModal.scrollTop = 0;
+
+            setTimeout(() => {
+                window.loadDynamicBannerAd("topNewsAd");
+                window.loadDynamicBannerAd("middleNewsAd");
+            }, 100);
         }
 
         window.closeFullModal = function() {
