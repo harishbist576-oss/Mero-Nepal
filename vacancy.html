@@ -216,23 +216,6 @@
             font-family: "Kalimati", "Mukta", sans-serif;
         }
 
-        .modal-ad-box {
-            width: 100%;
-            background: #1a1a1a;
-            border: 2px dashed #444444;
-            border-radius: 16px;
-            padding: 18px;
-            text-align: center;
-            margin-bottom: 20px;
-            min-height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #94a3b8;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
         .social-follow-box {
             background: linear-gradient(135deg, #1f2937 100%, #111827 100%);
             border: 1px solid #374151;
@@ -293,7 +276,7 @@
         /* Bottom Navigation Bar Styles - सेतो ब्याकग्राउन्ड */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%;
-            background: #ffffff; /* पूर्ण सेतो ब्याकग्राउन्ड */
+            background: #ffffff;
             backdrop-filter: blur(12px);
             display: flex; justify-content: space-around; align-items: center; 
             padding: 8px 0;
@@ -477,25 +460,15 @@
                 </div>
                 <div class="modal-header-title">${item.title}</div>
                 
-                <!-- १. शीर्षक लगत्तै टप ब्यानर एड -->
-                <div class="modal-ad-box">
-                    <span>[ Top Banner Ad Here ]</span>
-                </div>
-
-                <!-- २. त्यसपछि थम्बनेल (ब्यानर इमेज) -->
+                <!-- थम्बनेल (ब्यानर इमेज) -->
                 ${modalImgTag}
 
-                <!-- ३. त्यसपछि अटोमेटिक पहिलो ५० शब्द -->
+                <!-- पहिलो ५० शब्द -->
                 <div class="modal-description-box" style="margin-bottom: 15px;">
                     <div class="modal-description">${first50Words}</div>
                 </div>
 
-                <!-- ४. त्यसपछि दोस्रो ब्यानर एड बक्स -->
-                <div class="modal-ad-box">
-                    <span>[ ब्यानर एड (Banner Ad / Social Bar) यहाँ देखिनेछ ]</span>
-                </div>
-
-                <!-- ५. त्यसपछि सोसल मिडिया फलो बक्स -->
+                <!-- सोसल मिडिया फलो बक्स -->
                 <div class="social-follow-box">
                     <div class="social-title">हामीलाई Follow गर्नुहोस्:</div>
                     <div class="social-icons">
@@ -505,7 +478,7 @@
                     </div>
                 </div>
 
-                <!-- ६. अन्त्यमा ५० शब्दपछिको बाँकी टेक्स्ट -->
+                <!-- ५० शब्दपछिको बाँकी टेक्स्ट -->
                 ${remainingText ? `
                 <div class="modal-description-box">
                     <div class="modal-description">${remainingText}</div>
